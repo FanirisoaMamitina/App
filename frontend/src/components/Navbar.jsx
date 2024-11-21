@@ -1,13 +1,25 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
+import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import axiosClient from '../axios-client'
 import { useStateContext } from '../contexts/ContextProvider'
 import { useLocation } from 'react-router-dom'
+import userImage from '../assets/image/user.png'
+import { IoIosExit, IoMdExit } from 'react-icons/io'
+import Example from './dropDown'
+import {
+  ArchiveBoxXMarkIcon,
+  ChevronDownIcon,
+  PencilIcon,
+  Square2StackIcon,
+  TrashIcon,
+} from '@heroicons/react/16/solid'
 
 
 function Navbar() {
 
   const { pathname } = useLocation()
   const { user, setUser } = useStateContext()
+  const [isOpenDrop, setIsOpenDrop] = useState(false)
 
   useEffect(() => {
     axiosClient.get('/user')
@@ -15,185 +27,106 @@ function Navbar() {
         setUser(data)
       })
   }, [])
+
+  const handleOpen = () => {
+    return setIsOpenDrop(!isOpenDrop);
+  }
+
+  // const main = document.getElementById('root');
+  // const clik = (e) => {
+  //   addEventListener
+  // }
+
+  const handle = () => {
+    if (isOpenDrop) {
+      return setIsOpenDrop(false)
+    } else {
+      return null
+    }
+  }
   return (
-      <header className="header">
-        <div className="container-fluid">
-          <div className="row">
-            <div className="col-lg-5 col-md-5 col-6">
-              <div className="header-left d-flex align-items-center">
-                  {user.name}
-              </div>
+    <header onClick={handle} className="header relative">
+      <div className="container-fluid">
+        <div className="row">
+          <div className="col-lg-5 col-md-5 col-6">
+            <div className="header-left d-flex align-items-center">
+              {user.name}
             </div>
-            <div className="col-lg-7 col-md-7 col-6">
-              <div className="header-right">
-             
-                <div className="notification-box ml-15 d-none d-md-flex">
-                  <button className="dropdown-toggle" type="button" id="notification" data-bs-toggle="dropdown"
-                    aria-expanded="false">
-                    <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path
-                        d="M11 20.1667C9.88317 20.1667 8.88718 19.63 8.23901 18.7917H13.761C13.113 19.63 12.1169 20.1667 11 20.1667Z"
-                        fill="" />
-                      <path
-                        d="M10.1157 2.74999C10.1157 2.24374 10.5117 1.83333 11 1.83333C11.4883 1.83333 11.8842 2.24374 11.8842 2.74999V2.82604C14.3932 3.26245 16.3051 5.52474 16.3051 8.24999V14.287C16.3051 14.5301 16.3982 14.7633 16.564 14.9352L18.2029 16.6342C18.4814 16.9229 18.2842 17.4167 17.8903 17.4167H4.10961C3.71574 17.4167 3.5185 16.9229 3.797 16.6342L5.43589 14.9352C5.6017 14.7633 5.69485 14.5301 5.69485 14.287V8.24999C5.69485 5.52474 7.60672 3.26245 10.1157 2.82604V2.74999Z"
-                        fill="" />
-                    </svg>
-                    <span></span>
-                  </button>
-                  <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="notification">
-                    <li>
-                      <a href="#0">
-                        <div className="image">
-                          <img src="assets/images/lead/lead-6.png" alt="" />
-                        </div>
-                        <div className="content">
-                          <h6>
-                            John Doe
-                            <span className="text-regular">
-                              comment on a product.
-                            </span>
-                          </h6>
-                          <p>
-                            Lorem ipsum dolor sit amet, consect etur adipiscing
-                            elit Vivamus tortor.
-                          </p>
-                          <span>10 mins ago</span>
-                        </div>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#0">
-                        <div className="image">
-                          <img src="assets/images/lead/lead-1.png" alt="" />
-                        </div>
-                        <div className="content">
-                          <h6>
-                            Jonathon
-                            <span className="text-regular">
-                              like on a product.
-                            </span>
-                          </h6>
-                          <p>
-                            Lorem ipsum dolor sit amet, consect etur adipiscing
-                            elit Vivamus tortor.
-                          </p>
-                          <span>10 mins ago</span>
-                        </div>
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-             
-                <div className="header-message-box ml-15 d-none d-md-flex">
-                  <button className="dropdown-toggle" type="button" id="message" data-bs-toggle="dropdown"
-                    aria-expanded="false">
-                    <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path
-                        d="M7.74866 5.97421C7.91444 5.96367 8.08162 5.95833 8.25005 5.95833C12.5532 5.95833 16.0417 9.4468 16.0417 13.75C16.0417 13.9184 16.0364 14.0856 16.0259 14.2514C16.3246 14.138 16.6127 14.003 16.8883 13.8482L19.2306 14.629C19.7858 14.8141 20.3141 14.2858 20.129 13.7306L19.3482 11.3882C19.8694 10.4604 20.1667 9.38996 20.1667 8.25C20.1667 4.70617 17.2939 1.83333 13.75 1.83333C11.0077 1.83333 8.66702 3.55376 7.74866 5.97421Z"
-                        fill="" />
-                      <path
-                        d="M14.6667 13.75C14.6667 17.2938 11.7939 20.1667 8.25004 20.1667C7.11011 20.1667 6.03962 19.8694 5.11182 19.3482L2.76946 20.129C2.21421 20.3141 1.68597 19.7858 1.87105 19.2306L2.65184 16.8882C2.13062 15.9604 1.83338 14.89 1.83338 13.75C1.83338 10.2062 4.70622 7.33333 8.25004 7.33333C11.7939 7.33333 14.6667 10.2062 14.6667 13.75ZM5.95838 13.75C5.95838 13.2437 5.54797 12.8333 5.04171 12.8333C4.53545 12.8333 4.12504 13.2437 4.12504 13.75C4.12504 14.2563 4.53545 14.6667 5.04171 14.6667C5.54797 14.6667 5.95838 14.2563 5.95838 13.75ZM9.16671 13.75C9.16671 13.2437 8.7563 12.8333 8.25004 12.8333C7.74379 12.8333 7.33338 13.2437 7.33338 13.75C7.33338 14.2563 7.74379 14.6667 8.25004 14.6667C8.7563 14.6667 9.16671 14.2563 9.16671 13.75ZM11.4584 14.6667C11.9647 14.6667 12.375 14.2563 12.375 13.75C12.375 13.2437 11.9647 12.8333 11.4584 12.8333C10.9521 12.8333 10.5417 13.2437 10.5417 13.75C10.5417 14.2563 10.9521 14.6667 11.4584 14.6667Z"
-                        fill="" />
-                    </svg>
-                    <span></span>
-                  </button>
-                  <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="message">
-                    <li>
-                      <a href="#0">
-                        <div className="image">
-                          <img src="assets/images/lead/lead-5.png" alt="" />
-                        </div>
-                        <div className="content">
-                          <h6>Jacob Jones</h6>
-                          <p>Hey!I can across your profile and ...</p>
-                          <span>10 mins ago</span>
-                        </div>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#0">
-                        <div className="image">
-                          <img src="assets/images/lead/lead-3.png" alt="" />
-                        </div>
-                        <div className="content">
-                          <h6>John Doe</h6>
-                          <p>Would you mind please checking out</p>
-                          <span>12 mins ago</span>
-                        </div>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#0">
-                        <div className="image">
-                          <img src="assets/images/lead/lead-2.png" alt="" />
-                        </div>
-                        <div className="content">
-                          <h6>Anee Lee</h6>
-                          <p>Hey! are you available for freelance?</p>
-                          <span>1h ago</span>
-                        </div>
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-           
-                <div className="profile-box ml-15">
-                  <button className="dropdown-toggle bg-transparent border-0" type="button" id="profile"
-                    data-bs-toggle="dropdown" aria-expanded="false">
-                    <div className="profile-info">
-                      <div className="info">
-                        <div className="image">
-                          <img src="assets/images/profile/profile-image.png" alt="" />
-                        </div>
-                        <div>
-                          <h6 className="fw-500">Adam Joe</h6>
-                          <p>Admin</p>
-                        </div>
+          </div>
+          <div className="col-lg-7 col-md-7 col-6">
+            <div className="header-right">
+
+              <div className="notification-box ml-15 d-none d-md-flex">
+                <Menu>
+                  <MenuButton className="inline-flex items-center gap-2 rounded-md bg-gray-800 py-1.5 px-3 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-gray-700 data-[open]:bg-gray-700 data-[focus]:outline-1 data-[focus]:outline-white">
+                    Options
+                    <ChevronDownIcon className="size-4 fill-white/60" />
+                  </MenuButton>
+
+                  <MenuItems
+                    transition
+                    anchor="bottom end"
+                    className="w-52 origin-top-right z-[10000] rounded-xl border border-white/5 bg-dark-second p-1 text-sm/6 text-white transition duration-100 ease-out [--anchor-gap:var(--spacing-1)] focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0"
+                  >
+                    <MenuItem>
+                      <button className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3 data-[focus]:bg-white/10">
+                        <PencilIcon className="size-4 fill-white/30" />
+                        Edit
+                        <kbd className="ml-auto hidden font-sans text-xs text-white/50 group-data-[focus]:inline">⌘E</kbd>
+                      </button>
+                    </MenuItem>
+                    <MenuItem>
+                      <button className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3 data-[focus]:bg-white/10">
+                        <Square2StackIcon className="size-4 fill-white/30" />
+                        Duplicate
+                        <kbd className="ml-auto hidden font-sans text-xs text-white/50 group-data-[focus]:inline">⌘D</kbd>
+                      </button>
+                    </MenuItem>
+                    <div className="my-1 h-px bg-white/5" />
+                    <MenuItem>
+                      <button className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3 data-[focus]:bg-white/10">
+                        <ArchiveBoxXMarkIcon className="size-4 fill-white/30" />
+                        Archive
+                        <kbd className="ml-auto hidden font-sans text-xs text-white/50 group-data-[focus]:inline">⌘A</kbd>
+                      </button>
+                    </MenuItem>
+                    <MenuItem>
+                      <button className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3 data-[focus]:bg-white/10">
+                        <TrashIcon className="size-4 fill-white/30" />
+                        Delete
+                        <kbd className="ml-auto hidden font-sans text-xs text-white/50 group-data-[focus]:inline">⌘D</kbd>
+                      </button>
+                    </MenuItem>
+                  </MenuItems>
+                </Menu>
+              </div>
+
+              <div className="profile-box ml-15">
+                <button onClick={handleOpen} className="bg-transparent border-0" type="button">
+                  <div className="profile-info text-white">
+                    <div className="info">
+                      <div className="image">
+                        <img src={userImage} alt="" />
+                      </div>
+                      <div className='mt-4'>
+                        <h6 className="fw-500">{user.name}</h6>
+                        <p className='text-textG'>Admin</p>
                       </div>
                     </div>
-                  </button>
-                  <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="profile">
-                    <li>
-                      <div className="author-info flex items-center !p-1">
-                        <div className="image">
-                          <img src="assets/images/profile/profile-image.png" alt="image"/>
-                        </div>
-                        <div className="content">
-                          <h4 className="text-sm">Adam Joe</h4>
-                          <a className="text-black/40 dark:text-white/40 hover:text-black dark:hover:text-white text-xs"
-                            href="#">Email@gmail.com</a>
-                        </div>
-                      </div>
-                    </li>
-                    <li className="divider"></li>
-                    <li>
-                      <a href="#0">
-                        <i className="lni lni-user"></i> View Profile
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#0">
-                        <i className="lni lni-alarm"></i> Notifications
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#0"> <i className="lni lni-inbox"></i> Messages </a>
-                    </li>
-                    <li>
-                      <a href="#0"> <i className="lni lni-cog"></i> Settings </a>
-                    </li>
-                    <li className="divider"></li>
-                    <li>
-                      <a href="#0"> <i className="lni lni-exit"></i> Sign Out </a>
-                    </li>
-                  </ul>
-                </div>
-             
+                  </div>
+                </button>
               </div>
+
             </div>
           </div>
         </div>
-      </header>
+      </div>
+      {isOpenDrop &&
+        <ul className="absolute top-17 right-2 bg-dark-second px-8 py-2 rounded-b-md rounded-r-md shadow-md shadow-black text-slate-50">
+          <li><button className='flex items-center space-x-2 hover:text-teal-600' ><span>Logout</span> <IoMdExit /></button></li>
+        </ul>
+      }
+    </header>
   )
 }
 
