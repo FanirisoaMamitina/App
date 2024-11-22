@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import swal from 'sweetalert2';
 import { useNavigate, useParams } from "react-router-dom";
 import alertify from 'alertifyjs';
@@ -12,7 +12,7 @@ function EditClient() {
     const { id } = useParams();
 
     const [clientInput, setClient] = useState([]);
-    const [error, setErrors] = useState([]);
+    const [error_list, setErrors] = useState([]);
 
     useEffect(() => {
         setLoad('on');
@@ -105,52 +105,42 @@ function EditClient() {
                         </div>
 
                         <div className="form-group col-md-6">
-                            <label for="Nom" className='text-textG'>Nom</label>
-                            <input
-                                type="text"
-                                name='nom'
-                                className="mb-3 relative block w-full shadow-sm shadow-black appearance-none rounded-lg px-3 py-[10px] text-white placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm bg-dark-primary border-3 border-teal-950"
-                                id="Nom"
-                                placeholder="Nom"
-                                onChange={handleInput}
-                                value={clientInput.nom}
-                            />
-                            {clientInput.error_list && (
-                                <span className='text-red-600 text-sm mt-1'>{clientInput.error_list.nom}</span>
-                            )}
+                            <div className='mb-3'>
+                                <label for="Nom" className='text-textG'>Nom</label>
+                                <input
+                                    type="text"
+                                    name='nom'
+                                    className="relative block w-full shadow-sm shadow-black appearance-none rounded-lg px-3 py-[10px] text-white placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm bg-dark-primary border-3 border-teal-950"
+                                    id="Nom"
+                                    placeholder="Nom"
+                                    onChange={handleInput}
+                                    value={clientInput.nom}
+                                />
+                                {error_list && (
+                                    <span className='text-red-600 text-sm'>{error_list.nom}</span>
+                                )}
+                            </div>
 
-                            <label for="Tel" className='text-textG'>Telephone</label>
-                            <input
-                                type="text"
-                                name='tel'
-                                className="mb-3 relative block w-full shadow-sm shadow-black appearance-none rounded-lg px-3 py-[10px] text-white placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm bg-dark-primary border-3 border-teal-950"
-                                id="Tel"
-                                placeholder="Tel"
-                                onChange={handleInput}
-                                value={clientInput.tel}
-                            />
-                            {clientInput.error_list && (
-                                <span className='text-red-600 text-sm mt-1'>{clientInput.error_list.tel}</span>
-                            )}
-
-                            <label for="Adress" className='text-textG'>Adresse</label>
-                            <input
-                                type="text"
-                                name='adresse'
-                                className="mb-3 relative block w-full shadow-sm shadow-black appearance-none rounded-lg px-3 py-[10px] text-white placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm bg-dark-primary border-3 border-teal-950"
-                                id="Adress"
-                                placeholder="Adresse"
-                                onChange={handleInput}
-                                value={clientInput.adresse}
-                            />
-                            {clientInput.error_list && (
-                                <span className='text-red-600 text-sm mt-1'>{clientInput.error_list.adresse}</span>
-                            )}
+                            <div className='mb-3'>
+                                <label for="Tel" className='text-textG'>Telephone</label>
+                                <input
+                                    type="text"
+                                    name='tel'
+                                    className="relative block w-full shadow-sm shadow-black appearance-none rounded-lg px-3 py-[10px] text-white placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm bg-dark-primary border-3 border-teal-950"
+                                    id="Tel"
+                                    placeholder="Tel"
+                                    onChange={handleInput}
+                                    value={clientInput.tel}
+                                />
+                                {error_list && (
+                                    <span className='text-red-600 text-sm'>{error_list.tel}</span>
+                                )}
+                            </div>
                         </div>
                     </div>
                     <div className="flex justify-end mt-4">
-                        <button type="submit" class="btn btn-primary">
-                            {loader ?<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> : <span>Enregistrer</span>}
+                        <button type="submit" className="btn btn-primary">
+                            {loader ? <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> : <span>Enregistrer</span>}
                         </button>
                     </div>
 

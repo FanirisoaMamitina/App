@@ -119,7 +119,7 @@ function EditCategories() {
                                 value={categorieInput.nom_categorie}
                             />
                             {error.nom_categorie && (
-                                <span className='text-red-600 text-sm mt-1'>{categorieInput.error_list.nom_categorie}</span>
+                                <span className='text-red-600 text-sm mt-1'>{error.nom_categorie}</span>
                             )}
                         </div>
                     </div>

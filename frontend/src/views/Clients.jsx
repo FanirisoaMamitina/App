@@ -24,7 +24,7 @@ function Clients() {
     if (e.target.value == '') {
       setClientsList(searchApiData);
     } else {
-      const filterResult = searchApiData.filter(item => item.nom.toLowerCase().includes(e.target.value.toLowerCase()) || item.tel.toLowerCase().includes(e.target.value.toLowerCase()) || item.adresse.toLowerCase().includes(e.target.value.toLowerCase()))
+      const filterResult = searchApiData.filter(item => item.nom.toLowerCase().includes(e.target.value.toLowerCase()) ||  item.tel.toLowerCase().includes(e.target.value.toLowerCase()))
       setClientsList(filterResult);
     }
     setFilterValue(e.target.value);
@@ -116,7 +116,6 @@ function Clients() {
                 <th>ID</th>
                 <th>Nom</th>
                 <th>Telephone</th>
-                <th>Adresse</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -136,7 +135,6 @@ function Clients() {
                     <td>{cli.id}</td>
                     <td>{cli.nom}</td>
                     <td>{cli.tel}</td>
-                    <td>{cli.adresse}</td>
                     <td className='flex items-center gap-2'>
                       <Link to={`/Clients/Edit Client/${cli.id}`} className="text-yellow-500 text-xl p-1 rounded-md hover:text-yellow-800 shadow-md shadow-yellow-900 duration-500"><FiEdit /></Link>
                       &nbsp; &nbsp;

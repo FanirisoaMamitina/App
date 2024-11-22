@@ -77,7 +77,6 @@ const Facture = () => {
     },
     customerInfo: {
       name: infoCli.nom,
-      address: infoCli.adresse,
       email: infoCli.tel,
     },
     invoiceDetails: {     

@@ -43,7 +43,6 @@ class ClientController extends Controller
         $validator = Validator::make($request->all(), [
             'nom'=>'required|max:191',
             'tel'=>'required|max:15',
-            'adresse'=>'required|max:191',
         ]);
 
         if($validator->fails())
@@ -56,12 +55,11 @@ class ClientController extends Controller
             $client = new Clients;
             $client->nom = $request->input('nom');
             $client->tel = $request->input('tel');
-            $client->adresse = $request->input('adresse');
             $client->save();
             $this->enregistrerHistorique('ajout', 'clients', $client->id,$client->nom." ".$client->tel);
             return response()->json([
                 'status'=>200,
-                'message'=>'Client Added Successfully',
+                'message'=>'Client Ajouter Success',
             ]);
         }
     }
@@ -90,7 +88,6 @@ class ClientController extends Controller
         $validator = Validator::make($request->all(), [
             'nom'=>'required|max:191',
             'tel'=>'required|max:15',
-            'adresse'=>'required|max:191',
         ]);
 
         if($validator->fails())
@@ -106,7 +103,6 @@ class ClientController extends Controller
             {
                 $client->nom = $request->input('nom');
                 $client->tel = $request->input('tel');
-                $client->adresse = $request->input('adresse');
                 $client->save();
                 $this->enregistrerHistorique('modification', 'clients', $id, $client->nom." ".$client->tel);
                 return response()->json([

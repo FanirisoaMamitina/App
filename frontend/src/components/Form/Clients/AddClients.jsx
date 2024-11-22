@@ -13,7 +13,6 @@ function AddClients() {
     const [clientInput, setClients] = useState({
         nom: '',
         tel: '',
-        adresse: '',
         error_list: [],
     });
 
@@ -32,7 +31,6 @@ function AddClients() {
         const data = {
             nom: clientInput.nom,
             tel: clientInput.tel,
-            adresse: clientInput.adresse,
         }
 
         axiosClient.post('/store-clients', data).then(res => {
@@ -111,26 +109,10 @@ function AddClients() {
                                 )}
                             </div>
 
-                            <div className='mb-3'>
-                                <label for="Adress" className='text-textG'>Adresse</label>
-                                <input
-                                    type="text"
-                                    name='adresse'
-                                    className="relative block w-full shadow-sm shadow-black appearance-none rounded-lg px-3 py-[10px] text-white placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm bg-dark-primary border-3 border-teal-950"
-                                    id="Adress"
-                                    placeholder="Adresse"
-                                    onChange={handleInput}
-                                    value={clientInput.adresse}
-                                />
-                                {clientInput.error_list && (
-                                    <span className='text-red-600 text-sm mt-1'>{clientInput.error_list.adresse}</span>
-                                )}
-                            </div>
-
                         </div>
                     </div>
                     <div className="flex justify-end mt-4">
-                        <button type="submit" class="btn btn-primary">
+                        <button type="submit" className="btn btn-primary">
                             {load == 'on' ? <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> : <span>Enregistrer</span>}
                         </button>
                     </div>
