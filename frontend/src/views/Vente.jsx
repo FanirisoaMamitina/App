@@ -140,15 +140,6 @@ function Vente() {
   };
 
 
-  // {
-  //   v.detaille__vente.map((detail) => (
-  //     <div key={detail.id}>
-  //       {detail.produits?.nom_produit || 'Produit inconnu'} {" "}
-  //       <span className="font-bold">{detail.quantite} pcs </span>
-  //     </div>
-  //   ))
-  // }
-
   return (
     <div className='mt-[12px]'>
       <div className="car animated fadeInDown">
@@ -170,7 +161,7 @@ function Vente() {
           <div className='flex items-center justify-between mb-4 mx-4'>
             <div>
               <label className='text-textG mr-2'>Nombre de ligne:</label>
-              <select value={itemsPerPage} onChange={handleItemsPerPageChange} className="form-control w-20">
+              <select value={itemsPerPage} onChange={handleItemsPerPageChange} className="relative block w-full shadow-sm shadow-black appearance-none rounded-lg px-3 py-[10px] text-white placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm bg-dark-primary border-3 border-teal-950">
                 <option value={5}>5</option>
                 <option value={10}>10</option>
                 <option value={20}>20</option>
@@ -181,23 +172,23 @@ function Vente() {
             <div className='w-64 relative'>
               <input
                 type="search"
-                className='w-full h-10 pl-14 pr-2 mt-[18px] border border-gray-line rounded-md relative bg-transparent outline-none text-white'
+                className='relative block w-full shadow-sm shadow-black appearance-none rounded-lg pl-14 py-[10px] text-white placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm bg-dark-primary border-3 border-teal-950 mt-[18px]'
                 placeholder='Recherche...'
                 value={searchQuery}
                 onChange={handleSearchChange}
               />
-              <BiSearch className='text-white text-xl absolute top-[28px] left-4' />
+              <BiSearch className='text-white text-xl absolute top-[31px] left-4 z-20' />
             </div>
 
             {/* Filtre par date */}
             <div className='flex gap-4'>
               <div>
                 <label className='text-textG mr-2'>Date de début:</label>
-                <input type="date" value={startDate} onChange={handleStartDateChange} className='form-control' />
+                <input type="date" value={startDate} onChange={handleStartDateChange} className='relative block w-full shadow-sm shadow-black appearance-none rounded-lg px-3 py-[10px] text-white placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm bg-dark-primary border-3 border-teal-950' />
               </div>
               <div>
                 <label className='text-textG mr-2'>Date de fin:</label>
-                <input type="date" value={endDate} onChange={handleEndDateChange} className='form-control' />
+                <input type="date" value={endDate} onChange={handleEndDateChange} className='relative block w-full shadow-sm shadow-black appearance-none rounded-lg px-3 py-[10px] text-white placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm bg-dark-primary border-3 border-teal-950' />
               </div>
             </div>
 

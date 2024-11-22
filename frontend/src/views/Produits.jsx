@@ -127,8 +127,8 @@ function Produits() {
         <div className='animated fadeInDown'>
           <div className='flex items-center justify-between mb-4 mx-4'>
             <div className='w-64' >
-              <input type="search" value={filterValue} onInput={(e) => handleFilter(e)} className='w-full h-10 pl-14 pr-2 border border-gray-line rounded-md relative bg-transparent outline-none text-white' placeholder='Recherche...' />
-              <BiSearch className='text-white text-xl absolute top-[10px] left-9' />
+              <input type="search" value={filterValue} onInput={(e) => handleFilter(e)} className='relative block w-full shadow-sm shadow-black appearance-none rounded-lg pl-14 py-[10px] text-white placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm bg-dark-primary border-3 border-teal-950 mt-[18px]' placeholder='Recherche...' />
+              <BiSearch className='text-white text-xl absolute top-[31px] z-20 left-10' />
             </div>
             <div className='w-44 flex items-center gap-3'>
               <label for="inputState" className='text-textG'>State</label>

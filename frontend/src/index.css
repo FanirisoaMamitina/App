@@ -2703,8 +2703,8 @@ table > tbody > tr > td {
     justify-content: flex-end;
   }
   .header .header-right button {
-    border: 1px solid #F6F6F6;
-    background: #F6F6F6;
+    border: 2px solid rgb(75, 74, 74);
+    background: #484A4C;
     border-radius: 50%;
     height: 46px;
     width: 46px;
@@ -2712,7 +2712,7 @@ table > tbody > tr > td {
     justify-content: center;
     align-items: center;
     position: relative;
-    color: #1A2142;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
   }
   .header .header-right button svg {
     fill: currentColor;
