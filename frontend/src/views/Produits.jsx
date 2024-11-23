@@ -170,7 +170,7 @@ function Produits() {
             {loading &&
               <tbody>
                 <tr>
-                  <td colSpan="9" class="text-center">
+                  <td colSpan="9" className="text-center">
                     Chargement...
                   </td>
                 </tr>
