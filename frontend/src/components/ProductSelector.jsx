@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Switch, Input } from '@headlessui/react'
 import clsx from 'clsx'
+import { Autocomplete, TextField } from '@mui/material';
 
 function ProductSelector({ products, clients }) {
     const [searchTerm, setSearchTerm] = useState("");
@@ -17,7 +18,7 @@ function ProductSelector({ products, clients }) {
         setSearchTerm(term);
         setFilteredProducts(
             products.filter((product) =>
-                product.name.toLowerCase().includes(term)
+                product.nom_produit.toLowerCase().includes(term)
             )
         );
     };
@@ -42,7 +43,7 @@ function ProductSelector({ products, clients }) {
     const handleAddProduct = (productId) => {
         const product = products.find((p) => p.id === productId);
         if (product && !productList.some((p) => p.id === product.id)) {
-            setProductList([...productList, { ...product, quantity: 1, salePrice: product.price }]);
+            setProductList([...productList, { ...product, quantity: 1, salePrice: product.prix_original }]);
         }
     };
 
@@ -67,7 +68,7 @@ function ProductSelector({ products, clients }) {
     };
 
     const calculateBenefit = (product) => {
-        return (product.salePrice - product.price) * product.quantity;
+        return (product.salePrice - product.prix_original) * product.quantity;
     };
 
     const calculateAmount = (product) => {
@@ -79,7 +80,7 @@ function ProductSelector({ products, clients }) {
     };
 
     return (
-        <div className="relative flex flex-col h-screen">
+        <div className="relative flex flex-col h-screen ">
 
             <div className="bg-dark-primary shadow p-4 sticky top-0 z-10 flex gap-4">
                 {/* Formulaire Client */}
@@ -101,32 +102,28 @@ function ProductSelector({ products, clients }) {
                     </label>
 
                     {!isExistingClient ? (
-                        <>
-                            <input
-                                type="text"
-                                value={clientSearch}
-                                onChange={handleClientSearchChange}
-                                placeholder="Rechercher un client..."
-                                className="relative block w-full shadow-sm shadow-black appearance-none rounded-lg pl-[10px] py-[10px] text-white placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm bg-dark-primary border-3 border-teal-950 mt-[18px]"
-                            />
-                            <div
-                                className="max-h-32 overflow-y-auto border p-2 rounded"
-                            >
-                                {clients
-                                    .filter((client) =>
-                                        client.name.toLowerCase().includes(clientSearch)
-                                    )
-                                    .map((client) => (
-                                        <div
-                                            key={client.id}
-                                            onClick={() => handleSelectClient(client.id)}
-                                            className="p-2 hover:bg-gray-100 cursor-pointer"
-                                        >
-                                            {client.name} ({client.phone})
-                                        </div>
-                                    ))}
-                            </div>
-                        </>
+                        <Autocomplete
+                            options={clients}
+                            getOptionLabel={(option) => `${option.name} (${option.tel})`}
+                            value={selectedClient}
+                            onChange={(event, newValue) => setSelectedClient(newValue)}
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    label="Rechercher un client"
+                                    variant="outlined"
+                                    fullWidth
+                                    className="bg-dark-primary"
+                                    InputProps={{
+                                        ...params.InputProps,
+                                        style: { color: "white" },
+                                    }}
+                                    InputLabelProps={{
+                                        style: { color: "white" },
+                                    }}
+                                />
+                            )}
+                        />
                     ) : (
                         <>
                             <input
@@ -168,7 +165,7 @@ function ProductSelector({ products, clients }) {
                                     onClick={() => handleAddProduct(product.id)}
                                     className="p-2 hover:bg-gray-800 cursor-pointer"
                                 >
-                                    {product.name} (Prix d'origine: {product.price} Ar)
+                                  {product.category.nom_categorie}  {product.nom_produit} (Prix d'origine: {product.prix_original} Ar)
                                 </div>
                             ))
                         ) : (
@@ -180,7 +177,7 @@ function ProductSelector({ products, clients }) {
                 </div>
             </div>
 
-            <div className="flex-1 overflow-y-auto bg-dark-primary p-4">
+            <div className="flex-1 scrollbar-none scrollbar-track-dark-second scrollbar-thumb-gray-line hover:scrollbar-thin overflow-y-auto bg-dark-primary p-4">
                 <table>
                     <thead>
                         <tr className='bg-gradient-to-t from-indigo-700 to-indigo-600'>
@@ -212,14 +209,14 @@ function ProductSelector({ products, clients }) {
                         <tbody>
                             {
                                 productList.map((product) => {
-                                    const isInvalid = product.salePrice < product.price;
+                                    const isInvalid = product.salePrice < product.prix_original;
                                     return (
                                         <tr key={product.id}>
                                             <td>
-                                                {product.name}
+                                                {product.nom_produit}
                                             </td>
                                             <td>
-                                                {product.price} Ar
+                                                {product.prix_original} Ar
                                             </td>
                                             <td>
                                                 <div className="flex items-center space-x-1">

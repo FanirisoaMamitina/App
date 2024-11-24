@@ -24,7 +24,7 @@ function DefaultLayout() {
             <Sidebar />
             <div className="flex flex-col flex-grow w-full">
                 <Navbar />
-                <main className="flex-grow overflow-y-auto bg-dark-primary container-fluid">
+                <main className="flex-grow scrollbar-track-dark-second scrollbar-thumb-gray-line scrollbar-thin overflow-y-auto bg-dark-primary container-fluid">
                     <Outlet />
                 </main>
             </div>

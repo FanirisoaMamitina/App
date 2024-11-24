@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState , useEffect } from "react";
 import ProductSelector from "../components/ProductSelector";
+import axiosClient from '../axios-client';
 
 function Parametre() {
   const products = [
@@ -12,14 +13,24 @@ function Parametre() {
 
   const clients = [
     { id: "1", name: "Koto",tel:"0324566666"},
-    { id: "2", name: "Rivo", tel: "0344566698"},
+    { id: "2", name: "Rivo", tel: "0381266698"},
     { id: "3", name: "Aina", tel: "0344566698"},
 
   ];
 
+  const [listeProduits , setListeProduits] = useState([])
+ 
+  useEffect(() => {
+    axiosClient.get('/get-produits-disponibles').then(res => {
+        if (res.status === 200) {
+            setListeProduits(res.data.product);
+        }
+    });
+}, [])
+
   return (
     <div>
-      <ProductSelector products={products} clients={clients} />
+      <ProductSelector products={listeProduits} clients={clients} />
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import axiosClient from '../../axios-client';
 import swal from 'sweetalert2';
+import { IoIosCamera } from "react-icons/io";
 import { useNavigate, useParams } from "react-router-dom";
 
 function EditProduit() {
@@ -125,19 +126,21 @@ function EditProduit() {
 
             <div>
               <p className='text-textG text-xl'>Détail d'un produit</p>
-              {image ? (<img src={image} alt="Selected" width={300} accept="image/*" className="rounded shadow-md shadow-dark-primary" />)
-                : (
-                  <div style={{
-                    width: '300px',
-                    height: '200px',
-                    border: '2px dashed #ccc',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: '#999'
-                  }}>
-                    Image preview (300x200)
-                  </div>)}
+              <label htmlFor="inputImg" className="cursor-pointer">
+                {image ? (<img src={image} alt="Selected" width={300} accept="image/*" className="rounded shadow-md shadow-dark-primary" />)
+                  : (
+                    <div style={{
+                      width: '300px',
+                      height: '200px',
+                      border: '2px dashed #ccc',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      color: '#999'
+                    }}>
+                      <label htmlFor="inputImg" className="flex items-center space-x-1 cursor-pointer"> <IoIosCamera size={26} /> <span>Image preview (Max:2Mo)</span></label>
+                    </div>)}
+              </label>
             </div>
             <div className='form-group col-md-6'>
               <div className="flex items-center gap-3 mt-3">
@@ -193,7 +196,7 @@ function EditProduit() {
 
               <div className="input-group mb-3">
                 {/* <label className="input-group-text" for="inputGroupFile01">Image</label> */}
-                <input type="file" onChange={handleImageChange} className="relative block w-full shadow-sm shadow-black appearance-none rounded-lg px-3 py-[10px] text-white placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm bg-dark-primary border-3 border-teal-950" id="inputGroupFile01" />
+                <input type="file" onChange={handleImageChange} className="relative hidden w-full shadow-sm shadow-black appearance-none rounded-lg px-3 py-[10px] text-white placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm bg-dark-primary border-3 border-teal-950" id="inputImg" />
               </div>
             </div>
 
@@ -204,9 +207,9 @@ function EditProduit() {
               <p className='text-textG text-xl'>Détail en vente</p>
             </div>
             <div className='form-group col-md-6'>
-              <div className="flex items-center gap-3 mt-3">
+              <div className="mt-3">
                 <div>
-                  <label for="prix_original" className='text-textG'>Prix d'origine</label>
+                  <label for="prix_original" className='text-textG'>Prix</label>
                   <input
                     onChange={handleInput} value={produitInput.prix_original}
                     type="number"
@@ -220,20 +223,6 @@ function EditProduit() {
                   )}
                 </div>
 
-                <div>
-                  <label for="prix" className='text-textG'>Prix de vente</label>
-                  <input
-                    onChange={handleInput} value={produitInput.prix}
-                    type="number"
-                    name='prix'
-                    className="relative block w-full shadow-sm shadow-black appearance-none rounded-lg px-3 py-[10px] text-white placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm bg-dark-primary border-3 border-teal-950"
-                    id="prix"
-                    placeholder="Prix"
-                  />
-                  {error_list && (
-                    <span className='text-red-600 text-sm mt-1'>{error_list.prix}</span>
-                  )}
-                </div>
               </div>
 
               <div className="mt-3">

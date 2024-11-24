@@ -93,7 +93,6 @@ function Produits() {
       Marque: p.marque_produit,
       Description: p.description_produit,
       'Prix d\'origine': p.prix_original,
-      Prix: p.prix,
       Stock: p.stock,
     }));
 
@@ -161,7 +160,6 @@ function Produits() {
                 <th>Nom</th>
                 <th>Marque</th>
                 <th>Description</th>
-                <th>Prix d'origine</th>
                 <th>Prix</th>
                 <th>Stock</th>
                 <th>Actions</th>
@@ -193,7 +191,6 @@ function Produits() {
                       <td>{p.marque_produit}</td>
                       <td>{p.description_produit}</td>
                       <td>{p.prix_original}</td>
-                      <td>{p.prix}</td>
                       <td>{p.stock}</td>
                       <td className='flex items-center gap-2 py-4'>
                         <Link to={`/Produits/Edit Produit/${p.id}`} className="text-yellow-500 text-xl p-1 rounded-md hover:text-yellow-800 shadow-md shadow-yellow-900 duration-500"><FiEdit /></Link>

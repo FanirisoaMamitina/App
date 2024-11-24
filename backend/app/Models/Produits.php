@@ -16,7 +16,6 @@ class Produits extends Model
         'marque_produit',
         'description_produit',
         'prix_original',
-        'prix',
         'stock',
     ];
 

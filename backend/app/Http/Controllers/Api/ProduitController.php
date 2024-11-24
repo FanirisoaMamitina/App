@@ -39,7 +39,6 @@ class ProduitController extends Controller
             'marque_produit' => 'required|max:191',
             'description_produit' => 'required|max:191',
             'prix_original' => 'required|max:191',
-            'prix' => 'required|max:191',
             'stock' => 'required|max:191',
         ]);
 
@@ -62,7 +61,6 @@ class ProduitController extends Controller
             $product->marque_produit = $request->input('marque_produit');
             $product->description_produit = $request->input('description_produit');
             $product->prix_original = $request->input('prix_original');
-            $product->prix = $request->input('prix');
             $product->stock = $request->input('stock');
             $product->save();
 
@@ -116,7 +114,6 @@ class ProduitController extends Controller
             'marque_produit' => 'required|max:191',
             'description_produit' => 'required',
             'prix_original' => 'required|numeric',
-            'prix' => 'required|numeric',
             'stock' => 'required|integer',
         ]);
 
@@ -134,7 +131,6 @@ class ProduitController extends Controller
         $product->marque_produit = $request->input('marque_produit');
         $product->description_produit = $request->input('description_produit');
         $product->prix_original = $request->input('prix_original');
-        $product->prix = $request->input('prix');
         $product->stock = $request->input('stock');
 
         if ($request->hasFile('image')) {
