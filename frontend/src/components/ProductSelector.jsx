@@ -78,9 +78,28 @@ function ProductSelector({ products, clients }) {
     const calculateTotalAmount = () => {
         return productList.reduce((total, product) => total + calculateAmount(product), 0);
     };
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const dataToSend = {
+            client: !isExistingClient ? selectedClient : newClient,
+            products: productList.map((product) => ({
+                id: product.id,
+                quantity: product.quantity,
+                salePrice: product.salePrice,
+                totalAmount: calculateAmount(product),
+                benefit: calculateBenefit(product),
+            })),
+            totalAmount: calculateTotalAmount(),
+            // isImmediatePayment: isImmediatePayment,
+        };
+        console.log(dataToSend)
+
+    }
+
+
 
     return (
-        <div className="relative flex flex-col h-screen ">
+        <form onSubmit={handleSubmit} className="relative flex flex-col h-screen ">
 
             <div className="bg-dark-primary shadow p-4 sticky top-0 z-10 flex gap-4">
                 {/* Formulaire Client */}
@@ -127,6 +146,7 @@ function ProductSelector({ products, clients }) {
                     ) : (
                         <>
                             <input
+                                type="text"
                                 name="name"
                                 value={newClient.name}
                                 onChange={handleNewClientChange}
@@ -135,8 +155,9 @@ function ProductSelector({ products, clients }) {
                             />
 
                             <input
+                                type="text"
                                 name="name"
-                                value={newClient.phone}
+                                value={newClient.tel}
                                 onChange={handleNewClientChange}
                                 placeholder="Phone"
                                 className="relative block w-full shadow-sm shadow-black appearance-none rounded-lg pl-[10px] py-[10px] text-white placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm bg-dark-primary border-3 border-teal-950 mt-[18px]"
@@ -165,7 +186,7 @@ function ProductSelector({ products, clients }) {
                                     onClick={() => handleAddProduct(product.id)}
                                     className="p-2 hover:bg-gray-800 cursor-pointer"
                                 >
-                                  {product.category.nom_categorie}  {product.nom_produit} (Prix d'origine: {product.prix_original} Ar)
+                                    {product.category.nom_categorie}  {product.nom_produit} (Prix d'origine: {product.prix_original} Ar)
                                 </div>
                             ))
                         ) : (
@@ -299,13 +320,13 @@ function ProductSelector({ products, clients }) {
                         </div>
                         <div className="flex items-center space-x-2">
                             <button className="bg-green-800 text-white px-4 py-2 rounded hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-blue-300">Sauvegarder comme commande</button>
-                            <button className="bg-indigo-700 text-white px-4 py-2 rounded hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-blue-300">Payer immédiatement</button>
+                            <button type="submit" className="bg-indigo-700 text-white px-4 py-2 rounded hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-blue-300">Payer immédiatement</button>
 
                         </div>
                     </div>
                 )}
             </div>
-        </div>
+        </form>
     );
 }
 
