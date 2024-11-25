@@ -128,8 +128,8 @@ function Vente() {
         Date: new Date(v.date).toLocaleDateString(), // Formatage de la date
         Produit: v.detaille__vente // Accéder correctement aux détails de vente
           .map((detail) => `${detail.produits?.nom_produit || "Non spécifié"} (${detail.quantite} pcs)`)
-          .join(" + "), 
-        "Montant total": v.montant_total.toLocaleString(), 
+          .join(" + "),
+        "Montant total": v.montant_total.toLocaleString(),
       }))
     );
 
@@ -205,6 +205,7 @@ function Vente() {
                 <th>Nom</th>
                 <th>Date</th>
                 <th>Produit</th>
+                <th>Status</th>
                 <th>Montant total</th>
                 <th>Actions</th>
               </tr>
@@ -230,6 +231,15 @@ function Vente() {
                           <span className="font-bold">{detail.quantite} pcs </span>
                         </div>
                       ))}
+                    </td>
+                    <td>
+                      {v.Status === "direct" ? (
+                        <span className="status-btn secondary-btn">{v.Status}</span>
+                      ) : v.Status === "commande" ? (
+                        <span className="status-btn info-btn">{v.Status}</span>
+                      ) : (
+                        <span className="status-btn success-btn">{v.Status}</span>
+                      )}
                     </td>
 
                     <td>{v.montant_total}</td>

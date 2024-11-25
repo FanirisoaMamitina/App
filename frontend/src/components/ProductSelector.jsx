@@ -1,7 +1,10 @@
 import React, { useState } from "react";
-import { Switch, Input } from '@headlessui/react'
+import { Switch, Input, Button, Dialog, DialogPanel, DialogTitle } from '@headlessui/react'
 import clsx from 'clsx'
 import { Autocomplete, TextField } from '@mui/material';
+import { useNavigate } from "react-router-dom";
+import axiosClient from "../axios-client";
+import swal from 'sweetalert2';
 
 function ProductSelector({ products, clients }) {
     const [searchTerm, setSearchTerm] = useState("");
@@ -10,8 +13,15 @@ function ProductSelector({ products, clients }) {
     const [isExistingClient, setIsExistingClient] = useState(true);
     const [clientSearch, setClientSearch] = useState("");
     const [selectedClient, setSelectedClient] = useState(null);
-    const [newClient, setNewClient] = useState({ name: "", phone: "" });
+    const [newClient, setNewClient] = useState({ nom: "", tel: "" });
+    const [isImmediatePayment, setIsImmediatePayment] = useState(true);
+    const navigate = useNavigate();
+    const [load, setLoad] = useState('off');
+    const [dateReception, setDateReception] = useState("");
 
+    const handleDateChange = (event) => {
+      setDateReception(event.target.value); 
+    };
     // Gestion recherche produit
     const handleSearchChange = (e) => {
         const term = e.target.value.toLowerCase();
@@ -23,21 +33,9 @@ function ProductSelector({ products, clients }) {
         );
     };
 
-    // Gestion recherche client
-    const handleClientSearchChange = (e) => {
-        setClientSearch(e.target.value.toLowerCase());
-    };
-
-    const handleSelectClient = (clientId) => {
-        const client = clients.find((c) => c.id === clientId);
-        setSelectedClient(client);
-    };
-
     const handleNewClientChange = (e) => {
-        setNewClient({
-            ...newClient,
-            [e.target.name]: e.target.value,
-        });
+        e.persist();
+        setNewClient({ ...newClient, [e.target.name]: e.target.value });
     };
 
     const handleAddProduct = (productId) => {
@@ -78,8 +76,12 @@ function ProductSelector({ products, clients }) {
     const calculateTotalAmount = () => {
         return productList.reduce((total, product) => total + calculateAmount(product), 0);
     };
+
     const handleSubmit = (e) => {
         e.preventDefault();
+        setLoad("on")
+        const dateVente = new Date().toISOString().slice(0, 19).replace('T', ' '); // Format : "YYYY-MM-DD HH:mm:ss"
+
         const dataToSend = {
             client: !isExistingClient ? selectedClient : newClient,
             products: productList.map((product) => ({
@@ -90,11 +92,102 @@ function ProductSelector({ products, clients }) {
                 benefit: calculateBenefit(product),
             })),
             totalAmount: calculateTotalAmount(),
-            // isImmediatePayment: isImmediatePayment,
+            montantPayer: 0,
+            status: isImmediatePayment ? "direct" : "commande",
+            date_vente: dateVente,
+            DateReception: !isImmediatePayment ? dateReception : '', 
         };
-        console.log(dataToSend)
 
-    }
+        
+
+        // Envoi des données au backend
+        axiosClient.post('/store-vente', dataToSend)
+            .then(response => {
+                const Toast = swal.mixin({
+                    toast: true,
+                    position: "top-end",
+                    background: '#333',
+                    color: 'white',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.onmouseenter = swal.stopTimer;
+                        toast.onmouseleave = swal.resumeTimer;
+                    }
+                });
+                Toast.fire({
+                    icon: "success",
+                    title: "Vente enregistrée avec succès!"
+                });
+                const data = {
+                    client: !isExistingClient ? selectedClient : newClient,
+                    products: productList.map((product) => ({
+                        id: product.id,
+                        quantity: product.quantity,
+                        salePrice: product.salePrice,
+                        totalAmount: calculateAmount(product),
+                        benefit: calculateBenefit(product),
+                    })),
+                    totalAmount: calculateTotalAmount(),
+                    montantPayer: 0,
+                    status: isImmediatePayment ? "direct" : "commande",
+                    date_vente: dateVente,
+                    idVente: response.data.vente_id,
+                };
+                navigate("/Add Paiement", { state: data });
+
+                setLoad('off');
+            })
+            .catch(error => {
+                setLoad('off');
+
+                if (error.response) {
+                    const status = error.response.status;
+
+                    if (status === 400) {
+                        swal.fire({
+                            title: "Erreur de stock!",
+                            text: error.response.data.error,
+                            icon: "error",
+                            background: '#333',
+                            color: 'white',
+                            confirmButtonColor: '#3085d6'
+                        });
+                    } else if (status === 422) {
+                        console.error(error.response.data.errors);
+                        swal.fire({
+                            title: "Erreur de validation!",
+                            text: "Vérifiez les données saisies.",
+                            icon: "warning",
+                            background: '#333',
+                            color: 'white',
+                            confirmButtonColor: '#3085d6'
+                        });
+                    } else {
+                        swal.fire({
+                            title: "Erreur!",
+                            text: "Une erreur s'est produite lors de l'enregistrement de la vente.",
+                            icon: "error",
+                            background: '#333',
+                            color: 'white',
+                            confirmButtonColor: '#3085d6'
+                        });
+                    }
+                } else {
+                    console.error(error);
+                    swal.fire({
+                        title: "Erreur inconnue!",
+                        text: "Une erreur s'est produite lors de l'enregistrement de la vente.",
+                        icon: "error",
+                        background: '#333',
+                        color: 'white',
+                        confirmButtonColor: '#3085d6'
+                    });
+                }
+            });
+    };
+
 
 
 
@@ -123,7 +216,7 @@ function ProductSelector({ products, clients }) {
                     {!isExistingClient ? (
                         <Autocomplete
                             options={clients}
-                            getOptionLabel={(option) => `${option.name} (${option.tel})`}
+                            getOptionLabel={(option) => `${option.nom} (${option.tel})`}
                             value={selectedClient}
                             onChange={(event, newValue) => setSelectedClient(newValue)}
                             renderInput={(params) => (
@@ -147,8 +240,8 @@ function ProductSelector({ products, clients }) {
                         <>
                             <input
                                 type="text"
-                                name="name"
-                                value={newClient.name}
+                                name="nom"
+                                value={newClient.nom}
                                 onChange={handleNewClientChange}
                                 placeholder="Nom"
                                 className="relative block w-full shadow-sm shadow-black appearance-none rounded-lg pl-[10px] py-[10px] text-white placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm bg-dark-primary border-3 border-teal-950 mt-[18px]"
@@ -156,7 +249,7 @@ function ProductSelector({ products, clients }) {
 
                             <input
                                 type="text"
-                                name="name"
+                                name="tel"
                                 value={newClient.tel}
                                 onChange={handleNewClientChange}
                                 placeholder="Phone"
@@ -186,7 +279,7 @@ function ProductSelector({ products, clients }) {
                                     onClick={() => handleAddProduct(product.id)}
                                     className="p-2 hover:bg-gray-800 cursor-pointer"
                                 >
-                                    {product.category.nom_categorie}  {product.nom_produit} (Prix d'origine: {product.prix_original} Ar)
+                                    {product.category.nom_categorie}  {product.nom_produit} (Prix d'origine: {product.prix_original} Ar Stock: {product.stock})
                                 </div>
                             ))
                         ) : (
@@ -314,18 +407,59 @@ function ProductSelector({ products, clients }) {
             {/* Montant total */}
             <div className="bg-dark-second shadow p-4 sticky bottom-0 z-10">
                 {productList.length > 0 && (
-                    <div className="flex items-center justify-end space-x-3">
+                    <div className="flex items-center justify-between">
                         <div className="text-right font-bold text-[22px] text-white">
                             Montant Total: {calculateTotalAmount()} Ar
                         </div>
+                        <div className="flex items-center space-x-1">
+                            {!isImmediatePayment &&
+                                <>
+                                    <label htmlFor="date-reception" className="text-textG">
+                                        Date de reception
+                                    </label>
+                                    <input
+                                        type="date"
+                                        id="date-reception"
+                                        value={dateReception}
+                                        onChange={handleDateChange}    
+                                        className="relative block w-full shadow-sm shadow-black appearance-none rounded-lg pl-[10px] py-[10px] text-white placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm bg-dark-primary border-3 border-teal-950"
+                                    />
+                                </>
+                            }
+                        </div>
+
                         <div className="flex items-center space-x-2">
-                            <button className="bg-green-800 text-white px-4 py-2 rounded hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-blue-300">Sauvegarder comme commande</button>
-                            <button type="submit" className="bg-indigo-700 text-white px-4 py-2 rounded hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-blue-300">Payer immédiatement</button>
+
+                            <label className="flex items-center text-white">
+                                <Switch
+                                    checked={isImmediatePayment}
+                                    onChange={setIsImmediatePayment}
+                                    className={`relative inline-flex h-6 w-11 items-center rounded-full ${isImmediatePayment ? "bg-indigo-700" : "bg-green-700"
+                                        }`}
+                                >
+                                    <span
+                                        className={`${isImmediatePayment ? "translate-x-6" : "translate-x-1"
+                                            } inline-block h-4 w-4 transform rounded-full bg-white transition`}
+                                    />
+                                </Switch>
+                                <span className="ml-3">
+                                    {isImmediatePayment
+                                        ? "Payer immédiatement"
+                                        : "Sauvegarder comme commande"}
+                                </span>
+                            </label>
+                            <button
+                                type="submit"
+                                className="bg-blue-600 text-white px-4 py-2 rounded"
+                            >
+                                {load == 'on' ? <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> : <span>Confirmer</span>}
+                            </button>
 
                         </div>
                     </div>
                 )}
             </div>
+
         </form>
     );
 }

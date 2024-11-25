@@ -58,7 +58,7 @@ Route::middleware('auth:sanctum')->group(function () {
     //Ventes
     Route::get('view-ventes', [VenteController::class, 'index']);
     Route::post('store-vente', [VenteController::class, 'store']);
-    Route::get('getIdMax', [VenteController::class], 'getIdMax');
+    Route::get('lastId', [VenteController::class], 'lastId');
 
     //Dashboard
     Route::get('stats-ventes', [DashboardController::class, 'getStats']);

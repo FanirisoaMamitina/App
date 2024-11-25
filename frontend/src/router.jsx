@@ -21,6 +21,7 @@ import EditClient from "./components/Form/Clients/EditClient.jsx";
 import AddVente from "./components/Form/Vente/AddVente.jsx";
 import DetailVente from "./views/DetailVente.jsx";
 import EditProduit from "./components/Form/EditProduit.jsx";
+import AddPaiement from "./components/Form/Paiement/AddPaiement.jsx";
 
 const router = createBrowserRouter([
     {
@@ -82,6 +83,10 @@ const router = createBrowserRouter([
             {
                 path:'/Vente/Add Vente',
                 element: <AddVente />
+            },
+            {
+                path:'/Add Paiement',
+                element: <AddPaiement />
             },
             {
                 path:'/facture',
