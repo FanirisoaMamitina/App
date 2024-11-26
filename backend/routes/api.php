@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\ClientController;
 use App\Http\Controllers\Api\ProduitController;
 use App\Http\Controllers\Api\VenteController;
 use App\Http\Controllers\Api\DashboardController;
+use App\Http\Controllers\Api\PaiementController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -59,6 +60,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('view-ventes', [VenteController::class, 'index']);
     Route::post('store-vente', [VenteController::class, 'store']);
     Route::get('lastId', [VenteController::class], 'lastId');
+
+    //Paiement
+    Route::post('store-paiement', [PaiementController::class, 'store']);
 
     //Dashboard
     Route::get('stats-ventes', [DashboardController::class, 'getStats']);

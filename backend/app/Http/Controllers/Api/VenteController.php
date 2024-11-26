@@ -8,6 +8,7 @@ use App\Models\Detaille_Vente;
 use App\Models\HistoriqueAction;
 use App\Models\Produits;
 use App\Models\Ventes;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class VenteController extends Controller
@@ -50,7 +51,7 @@ class VenteController extends Controller
             'totalAmount' => 'required|numeric',
             'montantPayer' => 'required|numeric|min:0',
             'status' => 'required|in:direct,commande',
-            'date_vente' => 'required|date',
+            //'date_vente' => 'required|date',
         ]);
 
         // Vérification des stocks pour chaque produit
@@ -67,10 +68,10 @@ class VenteController extends Controller
         $vente = new Ventes();
         $vente->client_id = is_numeric($validatedData['client'])
             ? $validatedData['client']
-            : $this->createNewClient($validatedData['client']); // Gestion des nouveaux clients
-        $vente->date = $validatedData['date_vente'];
+            : $this->createNewClient($validatedData['client']);
+        $vente->date = Carbon::now('Indian/Antananarivo');
         $vente->montant_total = $validatedData['totalAmount'];
-        $vente->DateReception = $validatedData['date_vente'];// Exemple de logique pour DateReception
+        $vente->DateReception = $request->input('DateReception');
         $vente->MontantRestant = $validatedData['totalAmount'] - $validatedData['montantPayer'];
         $vente->TotalMontantPaye = $validatedData['montantPayer'];
         $vente->Status = $validatedData['status'];

@@ -1,10 +1,14 @@
-import React, {useState } from "react";
-import { useLocation } from "react-router-dom";
+import React, {useState , useEffect } from "react";
+import { useLocation , useNavigate, useParams } from "react-router-dom";
+import swal from 'sweetalert2';
 import CountUp from "react-countup";
 import { Autocomplete, TextField } from "@mui/material";
+import axiosClient from "../../../axios-client";
 
 function AddPaiement() {
     const { state } = useLocation();
+    const [paiementErrors,setPaiementErrors] =useState ([])
+    const [load, setLoad] = useState('off');
 
     const [montant, setMontant] = useState("");
     const [modePaiement, setModePaiement] = useState("");
@@ -17,17 +21,56 @@ function AddPaiement() {
 
     const handleSubmit = (e) =>{
         e.preventDefault();
+        setLoad("on")
+
         const data = {
             idVente: state?.idVente, // ID de la vente passé depuis l'état
             MontantPaye: montant,
             ModePaiement: modePaiement,
             Ref: reference,
-            DatePaiement: new Date().toISOString(), // Date actuelle
+            // DatePaiement: new Date().toISOString(), // Date actuelle
         };
-        console.log(data)
+        
+        axiosClient.post("/store-paiement", data).then((res) => {
+            if (res.data.status === 200) {
+                // Notification de succès
+                const Toast = swal.mixin({
+                    toast: true,
+                    position: "top-end",
+                    background: "#333",
+                    color: "white",
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.onmouseenter = swal.stopTimer;
+                        toast.onmouseleave = swal.resumeTimer;
+                    },
+                });
+                Toast.fire({
+                    icon: "success",
+                    title: res.data.message,
+                });
+    
+                // Redirection ou actions supplémentaires
+                //navigate("/Ventes/List Paiements"); // Remplacez par la route appropriée
+            } else if (res.data.status === 400) {
+                // Gestion des erreurs de validation
+                setPaiementErrors(res.data.errors); // Supposons que vous avez un état `paiementErrors` pour les erreurs
+            }
+    
+            setLoad("off"); // Arrêt du chargement
+        }).catch((error) => {
+            console.error("Erreur lors de l'envoi des données : ", error);
+            setLoad("off");
+        });
     }
 
-
+    useEffect(() => {
+        if (state.status === "direct") {
+            setMontant(state.totalAmount || ""); // Valeur par défaut pour paiement direct
+        }
+    }, [state]);
 
 
     return (
@@ -103,7 +146,7 @@ function AddPaiement() {
                         </label>
                         <input
                             type="number"
-                            value={ state.status === "direct" ? state.totalAmount : montant}
+                            value={montant}
                             onChange={(e) => setMontant(e.target.value)}
                             id="montant"
                             placeholder="Montant à payer"
@@ -151,7 +194,7 @@ function AddPaiement() {
                         type="submit"
                         className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
                     >
-                        Payer
+                         {load == 'on' ? <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> : <span>Payer</span>}
                     </button>
                 </div>
             </div>

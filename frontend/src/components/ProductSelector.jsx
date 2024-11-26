@@ -80,10 +80,9 @@ function ProductSelector({ products, clients }) {
     const handleSubmit = (e) => {
         e.preventDefault();
         setLoad("on")
-        const dateVente = new Date().toISOString().slice(0, 19).replace('T', ' '); // Format : "YYYY-MM-DD HH:mm:ss"
-
+       
         const dataToSend = {
-            client: !isExistingClient ? selectedClient : newClient,
+            client: !isExistingClient ? selectedClient.id : newClient,
             products: productList.map((product) => ({
                 id: product.id,
                 quantity: product.quantity,
@@ -94,10 +93,8 @@ function ProductSelector({ products, clients }) {
             totalAmount: calculateTotalAmount(),
             montantPayer: 0,
             status: isImmediatePayment ? "direct" : "commande",
-            date_vente: dateVente,
             DateReception: !isImmediatePayment ? dateReception : '', 
         };
-
         
 
         // Envoi des données au backend
@@ -132,7 +129,6 @@ function ProductSelector({ products, clients }) {
                     totalAmount: calculateTotalAmount(),
                     montantPayer: 0,
                     status: isImmediatePayment ? "direct" : "commande",
-                    date_vente: dateVente,
                     idVente: response.data.vente_id,
                 };
                 navigate("/Add Paiement", { state: data });
