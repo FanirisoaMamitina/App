@@ -7,6 +7,9 @@ import axiosClient from "../../../axios-client";
 
 function AddPaiement() {
     const { state } = useLocation();
+    const navigate = useNavigate()
+    // const { idVente: idVenteParam } = useParams();
+
     const [paiementErrors,setPaiementErrors] =useState ([])
     const [load, setLoad] = useState('off');
 
@@ -53,7 +56,7 @@ function AddPaiement() {
                 });
     
                 // Redirection ou actions supplémentaires
-                //navigate("/Ventes/List Paiements"); // Remplacez par la route appropriée
+                navigate('/Vente/List Vente'); // Remplacez par la route appropriée
             } else if (res.data.status === 400) {
                 // Gestion des erreurs de validation
                 setPaiementErrors(res.data.errors); // Supposons que vous avez un état `paiementErrors` pour les erreurs
@@ -89,7 +92,7 @@ function AddPaiement() {
                         </h6>
                         <h6 className="text-gray-400 flex items-center justify-between">
                             <span>Id Vente :</span>
-                            <span className="font-bold text-xl">{state?.idVente || "N/A"}</span>
+                            <span className="font-bold text-xl">{state?.idVente || "N/A" }</span>
                         </h6>
                     </div>
                 </div>

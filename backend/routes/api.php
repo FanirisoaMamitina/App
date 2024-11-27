@@ -58,6 +58,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //Ventes
     Route::get('view-ventes', [VenteController::class, 'index']);
+    Route::get('ventes/{id}', [VenteController::class, 'getInfoById']);
     Route::post('store-vente', [VenteController::class, 'store']);
     Route::get('lastId', [VenteController::class], 'lastId');
 

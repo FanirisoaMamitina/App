@@ -116,6 +116,22 @@ class VenteController extends Controller
         return $client->id;
     }
 
+    public function getInfoById($id)
+    {
+        $vente = Ventes::find($id);
+        if ($vente) {
+            return response()->json([
+                'status' => 200,
+                'vente' => $vente
+            ]);
+        } else {
+            return response()->json([
+                'status' => 404,
+                'message' => 'No vente Id Found'
+            ]);
+        }
+    }
+
     /**
      * Fonction pour enregistrer les actions dans l'historique
      */

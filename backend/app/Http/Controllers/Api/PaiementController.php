@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Paiement;
+use App\Models\Ventes;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -28,7 +29,6 @@ class PaiementController extends Controller
         ]);
     }
 
-    // Enregistrement du paiement
     $paiement = new Paiement;
     $paiement->idVente = $request->input('idVente');
     $paiement->MontantPaye = $request->input('MontantPaye');
@@ -37,6 +37,13 @@ class PaiementController extends Controller
     $paiement->DatePaiement = Carbon::now('Indian/Antananarivo');
     $paiement->save();
 
+    $vente = Ventes::find($paiement['idVente']);
+    $vente->TotalMontantPaye += $paiement['MontantPaye'];
+    $vente->MontantRestant = $vente->montant_total - $vente->TotalMontantPaye;
+    if($vente->MontantRestant == 0){
+        $vente->Status = "soldée";
+    }
+    $vente->save();
     // Historique
     // $this->enregistrerHistorique(
     //     'ajout',
