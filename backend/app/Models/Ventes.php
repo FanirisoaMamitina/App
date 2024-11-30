@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use App\Models\Clients;
@@ -12,7 +11,6 @@ class Ventes extends Model
 
     protected $table = 'ventes';
 
-    // Colonnes pouvant être remplies en masse
     protected $fillable = [
         'client_id',
         'date',
@@ -23,7 +21,6 @@ class Ventes extends Model
         'Status',
     ];
 
-    // Chargement automatique de la relation avec les clients
     protected $with = ['clients'];
 
     /**
@@ -40,5 +37,13 @@ class Ventes extends Model
     public function detaille_Vente()
     {
         return $this->hasMany(Detaille_Vente::class, 'vente_id', 'id');
+    }
+
+    /**
+     * Relation avec le modèle Paiement
+     */
+    public function paiements()
+    {
+        return $this->hasMany(Paiement::class, 'idVente', 'id');
     }
 }

@@ -78,7 +78,7 @@ function AddClients() {
 
                         <div className="form-group col-md-6">
                             <div className='mb-3'>
-                                <label for="Nom" className='text-textG'>Nom</label>
+                                <label htmlFor="Nom" className='text-textG'>Nom</label>
                                 <input
                                     type="text"
                                     name='nom'
@@ -94,7 +94,7 @@ function AddClients() {
                             </div>
 
                             <div className='mb-3'>
-                                <label for="Tel" className='text-textG'>Telephone</label>
+                                <label htmlFor="Tel" className='text-textG'>Telephone</label>
                                 <input
                                     type="text"
                                     name='tel'

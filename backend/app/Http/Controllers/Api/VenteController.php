@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Clients;
 use App\Models\Detaille_Vente;
 use App\Models\HistoriqueAction;
+use App\Models\Paiement;
 use App\Models\Produits;
 use App\Models\Ventes;
 use Carbon\Carbon;
@@ -24,7 +25,6 @@ class VenteController extends Controller
             ->get();
 
         return response()->json(['ventes' => $ventes]);
-
     }
 
     public function lastId()
@@ -131,6 +131,29 @@ class VenteController extends Controller
             ]);
         }
     }
+
+    public function getInfoVentePaiementById($id)
+    {
+        $vente = Ventes::with([
+            'paiements',
+            'clients',
+            'detaille_Vente.produits'
+        ])->find($id);
+
+        if ($vente) {
+            return response()->json([
+                'status' => 200,
+                'vente' => $vente,
+            ]);
+        } else {
+            return response()->json([
+                'status' => 404,
+                'message' => 'No vente Id Found',
+            ]);
+        }
+    }
+
+
 
     /**
      * Fonction pour enregistrer les actions dans l'historique

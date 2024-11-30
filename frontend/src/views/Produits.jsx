@@ -131,7 +131,7 @@ function Produits() {
             </div>
             <div className='w-44 flex items-center gap-3'>
               <label for="inputState" className='text-textG'>State</label>
-              <select id="inputState" class="form-control">
+              <select id="inputState" className="form-control">
                 <option selecte>Choose...</option>
                 <option>...</option>
               </select>
@@ -139,7 +139,7 @@ function Produits() {
 
             <div className='w-44 flex items-center gap-3'>
               <label for="inputState" className='text-textG'>State</label>
-              <select id="inputState" class="form-control">
+              <select id="inputState" className="form-control">
                 <option selected>Choose...</option>
                 <option>...</option>
               </select>

@@ -53,6 +53,13 @@ function AddPaiement() {
                 });
                 if (isChecked) {
                     console.log(res.data.idPaiement)
+                    axiosClient.get(`/vente-paiements/${data.idVente}`)
+                        .then(res => {
+                            if (res.status === 200) {
+                                console.log(res.data.vente);
+                                console.log(res.data.detaille);
+                            }
+                        });
                     navigate("/Facture", { state: data }); // Redirection vers page1 avec `state`
                 } else {
                     navigate('/Vente/List Vente');

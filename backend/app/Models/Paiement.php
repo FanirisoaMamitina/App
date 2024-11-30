@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -15,7 +14,7 @@ class Paiement extends Model
 
     protected $fillable = [
         'id',
-        'idVente',
+        'idVente', // clé étrangère vers la table `ventes`
         'Ref',
         'MontantPaye',
         'DatePaiement',
@@ -32,5 +31,13 @@ class Paiement extends Model
             $nextId = $latestPaiement ? intval(substr($latestPaiement->id, 4)) + 1 : 1;
             $paiement->id = 'PAY-' . str_pad($nextId, 3, '0', STR_PAD_LEFT);
         });
+    }
+
+    /**
+     * Relation avec le modèle Ventes
+     */
+    public function vente()
+    {
+        return $this->belongsTo(Ventes::class, 'idVente', 'id');
     }
 }

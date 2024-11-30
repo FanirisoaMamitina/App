@@ -63,9 +63,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('ventes/{id}', [VenteController::class, 'getInfoById']);
     Route::post('store-vente', [VenteController::class, 'store']);
     Route::get('lastId', [VenteController::class], 'lastId');
+    Route::get('vente-paiements/{id}', [VenteController::class, 'getInfoVentePaiementById']);
 
     //Paiement
     Route::post('store-paiement', [PaiementController::class, 'store']);
+
 
     //Dashboard
     Route::get('stats-ventes', [DashboardController::class, 'getStats']);
@@ -73,6 +75,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('send-invoice', [InvoiceController::class, 'sendInvoice']);
 });
+
 
 Route::post('/signup', [AuthController::class, 'signup']);
 Route::post('/login', [AuthController::class, 'login']);
