@@ -3,12 +3,14 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\ClientController;
+use App\Http\Controllers\Api\DashboardController;
+use App\Http\Controllers\Api\InvoiceController;
+use App\Http\Controllers\Api\PaiementController;
 use App\Http\Controllers\Api\ProduitController;
 use App\Http\Controllers\Api\VenteController;
-use App\Http\Controllers\Api\DashboardController;
-use App\Http\Controllers\Api\PaiementController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -69,6 +71,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('stats-ventes', [DashboardController::class, 'getStats']);
     Route::get('historique-ventes', [DashboardController::class, 'getHistoriqueVentes']);
 
+    Route::post('send-invoice', [InvoiceController::class, 'sendInvoice']);
 });
 
 Route::post('/signup', [AuthController::class, 'signup']);

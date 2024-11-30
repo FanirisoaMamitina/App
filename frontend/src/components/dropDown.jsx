@@ -28,18 +28,21 @@ export default function Action({ data }) {
         >
           <MenuItem>
             <button className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3 data-[focus]:bg-white/10">
-              <IoEyeSharp  className="size-4 fill-white/30" />
+              <IoEyeSharp className="size-4 fill-white/30" />
               Voir
               <kbd className="ml-auto hidden font-sans text-xs text-white/50 group-data-[focus]:inline">⌘V</kbd>
             </button>
           </MenuItem>
-          <MenuItem>
-            <Link to={`/Add Paiement/${data.id}`} className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3 data-[focus]:bg-white/10 text-decoration-none text-white">
-              <IoMdCash className="size-4 fill-white/30" />
-               Paiement
-              <kbd className="ml-auto hidden font-sans text-xs text-white/50 group-data-[focus]:inline">⌘P</kbd>
-            </Link>
-          </MenuItem>
+          {!(data.MontantRestant == 0 && data.Status === "soldée") &&
+            <MenuItem>
+              <Link to={`/AddPaiement/${data.id}`} className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3 data-[focus]:bg-white/10 text-decoration-none text-white">
+                <IoMdCash className="size-4 fill-white/30" />
+                Paiement
+                <kbd className="ml-auto hidden font-sans text-xs text-white/50 group-data-[focus]:inline">⌘P</kbd>
+              </Link>
+            </MenuItem>
+          }
+
           <MenuItem>
             <button className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3 data-[focus]:bg-white/10">
               <Square2StackIcon className="size-4 fill-white/30" />
