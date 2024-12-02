@@ -126,7 +126,7 @@ class ClientController extends Controller
         $result = Clients::where('id',$id)->delete();
         if($result)
         {
-            $this->enregistrerHistorique('suppression', 'clients', $id,  $result->id,$result->nom." ".$result->tel);
+             $this->enregistrerHistorique('suppression', 'clients', $id,  $result->id,$result->nom." ".$result->tel);
             return response()->json(['result'=>'Client has been deleted']);
         }
     }

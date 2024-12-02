@@ -9,7 +9,10 @@ class Produits extends Model
 {
     use HasFactory;
     protected $table = 'produits';
+    public $incrementing = false; // Désactive l'auto-incrémentation pour l'ID
+    protected $keyType = 'string'; // Type de clé primaire
     protected $fillable = [
+        'id',
         'categorie_id',
         'image',
         'nom_produit',
@@ -18,6 +21,18 @@ class Produits extends Model
         'prix_original',
         'stock',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($produit) {
+            // Génération de l'ID personnalisé : PD[date: YYMMDD]-[séquence]
+            $latestProduit = self::latest('created_at')->first();
+            $nextId = $latestProduit ? intval(substr($latestProduit->id, 7)) + 1 : 1;
+            $produit->id = 'PD' . now()->format('ym') . '-' . str_pad($nextId, 6, '0', STR_PAD_LEFT);
+        });
+    }
 
     protected $with = ['category'];
     public function category()

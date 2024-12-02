@@ -10,8 +10,10 @@ class Ventes extends Model
     use HasFactory;
 
     protected $table = 'ventes';
-
+    public $incrementing = false;
+    protected $keyType = 'string';
     protected $fillable = [
+        'id',
         'client_id',
         'date',
         'montant_total',
@@ -23,6 +25,17 @@ class Ventes extends Model
 
     protected $with = ['clients'];
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($vente) {
+            $latestVente = self::latest('created_at')->first();
+            $nextId = $latestVente ? intval(substr($latestVente->id, 7)) + 1 : 1;
+            $vente->id = 'VE' . now()->format('ym') . '-' . str_pad($nextId, 6, '0', STR_PAD_LEFT);
+            $vente->date = now('Indian/Antananarivo');
+        });
+    }
     /**
      * Relation avec le modèle Clients
      */

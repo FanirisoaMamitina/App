@@ -59,17 +59,17 @@ class VenteController extends Controller
             $product = Produits::find($productData['id']);
             if ($product->stock < $productData['quantity']) {
                 return response()->json([
-                    'error' => "Le stock du produit {$product->nom} est insuffisant. Disponible: {$product->stock}, demandé: {$productData['quantity']}."
+                    'error' => "Le stock du produit {$product->nom_produit} est insuffisant. Disponible: {$product->stock}, demandé: {$productData['quantity']}."
                 ], 400);
             }
         }
 
         // Création de la vente
         $vente = new Ventes();
-        $vente->client_id = is_numeric($validatedData['client'])
+        $vente->client_id = is_string($validatedData['client'])
             ? $validatedData['client']
             : $this->createNewClient($validatedData['client']);
-        $vente->date = Carbon::now('Indian/Antananarivo');
+        // $vente->date = Carbon::now('Indian/Antananarivo');
         $vente->montant_total = $validatedData['totalAmount'];
         $vente->DateReception = $request->input('DateReception');
         $vente->MontantRestant = $validatedData['totalAmount'] - $validatedData['montantPayer'];

@@ -21,6 +21,18 @@ function AddPaiement() {
         { id: "3", name: "Banque" },
     ];
 
+    const [allData, setAllData] = useState({});
+    const [idFac, setIdFac] = useState();
+
+    const storeFacture = (idPaiement) => {
+        axiosClient.post('/store-facture', idPaiement).then((res) => {
+            if (res.data.status === 200) {
+                setIdFac(res.data.idFacture);
+                console.log(res.data.idFacture);
+            }
+        })
+    }
+
     const handleSubmit = (e) => {
         e.preventDefault();
         setLoad("on")
@@ -52,12 +64,16 @@ function AddPaiement() {
                     title: res.data.message,
                 });
                 if (isChecked) {
-                    console.log(res.data.idPaiement)
+                    storeFacture({ idPaiement: res.data.idPaiement });
                     axiosClient.get(`/vente-paiements/${data.idVente}`)
                         .then(res => {
                             if (res.status === 200) {
-                                console.log(res.data.vente);
-                                console.log(res.data.detaille);
+                                setAllData(res.data.vente);
+                                console.log(res.data.vente)
+                                const det = {
+                                    datt:res.data.vente,
+                                }
+                                console.log(det)
                             }
                         });
                     navigate("/Facture", { state: data }); // Redirection vers page1 avec `state`

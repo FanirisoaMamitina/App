@@ -67,7 +67,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //Paiement
     Route::post('store-paiement', [PaiementController::class, 'store']);
-
+    Route::post('store-facture',[PaiementController::class, 'storeFacture']);
 
     //Dashboard
     Route::get('stats-ventes', [DashboardController::class, 'getStats']);

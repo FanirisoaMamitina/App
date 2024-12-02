@@ -11,10 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('categories', function (Blueprint $table) {
+        Schema::create('historique_actions', function (Blueprint $table) {
             $table->id();
-            $table->string('nom_categorie');
-            $table->boolean('status_categorie')->default(false);
+            $table->string('action');
+            $table->string('table');
+            $table->bigInteger('element_id');
+            $table->longText('details');
+            $table->bigInteger('user_id');
             $table->timestamps();
         });
     }
@@ -24,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('categories');
+        Schema::dropIfExists('historique_actions');
     }
 };

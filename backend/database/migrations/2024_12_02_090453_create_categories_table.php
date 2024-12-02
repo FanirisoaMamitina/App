@@ -11,7 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::dropIfExists('categories');
+        Schema::create('categories', function (Blueprint $table) {
+            $table->id(); // id auto-incrémenté
+            $table->string('nom_categorie');
+            $table->boolean('status_categorie')->default(0);
+            $table->timestamps();
+        });
     }
 
     /**
@@ -19,11 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::create('categories', function (Blueprint $table) {
-            $table->id();
-            $table->string('nom_categorie');
-            $table->tinyInteger('status_categorie');
-            $table->timestamps();
-        });
+        Schema::dropIfExists('categories');
     }
 };

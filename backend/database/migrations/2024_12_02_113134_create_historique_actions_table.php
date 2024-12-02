@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('historique_actions', function (Blueprint $table) {
             $table->id();
-            $table->string('action');  // 'ajout', 'modification', ou 'suppression'
-            $table->string('table');   // nom de la table affectée
-            $table->unsignedBigInteger('element_id'); // ID de l'élément affecté
-            $table->json('details')->nullable(); // détails de l'action
-            $table->unsignedBigInteger('user_id')->nullable(); // optionnel : ID de l'utilisateur
+            $table->string('action');
+            $table->string('table');
+            $table->string('element_id');
+            $table->longText('details');
+            $table->bigInteger('user_id');
             $table->timestamps();
         });
     }

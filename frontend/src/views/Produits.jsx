@@ -157,8 +157,8 @@ function Produits() {
                 <th>ID</th>
                 <th>Image</th>
                 <th>Categorie</th>
-                <th>Nom</th>
                 <th>Marque</th>
+                <th>Nom</th>
                 <th>Description</th>
                 <th>Prix</th>
                 <th>Stock</th>
@@ -187,8 +187,8 @@ function Produits() {
                       <td>{p.id}</td>
                       <td><img src={`http://localhost:8000/${p.image}`} className='rounded-md shadow-md shadow-black' width={40} alt={p.nom_produit} /></td>
                       <td>{p.category.nom_categorie}</td>
-                      <td>{p.nom_produit}</td>
                       <td>{p.marque_produit}</td>
+                      <td>{p.nom_produit}</td>
                       <td>{p.description_produit}</td>
                       <td>{p.prix_original}</td>
                       <td>{p.stock}</td>

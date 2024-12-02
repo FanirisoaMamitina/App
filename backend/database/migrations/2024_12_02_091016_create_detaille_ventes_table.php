@@ -13,12 +13,17 @@ return new class extends Migration
     {
         Schema::create('detaille_ventes', function (Blueprint $table) {
             $table->id();
-            $table->integer('vente_id');
-            $table->integer('produit_id');
+            $table->string('vente_id'); // Doit correspondre au type 'id' de la table ventes
+            $table->string('produit_id'); // Doit correspondre au type 'id' de la table produits
             $table->integer('quantite');
             $table->decimal('prix_unitaire', 10, 2);
             $table->timestamps();
+        
+            // Définir les clés étrangères
+            $table->foreign('vente_id')->references('id')->on('ventes')->onDelete('cascade');
+            $table->foreign('produit_id')->references('id')->on('produits')->onDelete('cascade');
         });
+        
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Facture;
 use App\Models\Paiement;
 use App\Models\Ventes;
 use Carbon\Carbon;
@@ -55,6 +56,18 @@ class PaiementController extends Controller
             'status' => 200,
             'message' => 'Paiement ajouté avec succès',
             'idPaiement' => $paiement->id,
+        ]);
+    }
+
+    public function storeFacture(Request $request)
+    {
+        $facture = new Facture;
+        $facture->idPaiement = $request->input('idPaiement');
+        $facture->save();
+
+        return response()->json([
+            'status' => 200,
+            'idFacture' => $facture->id,
         ]);
     }
 

@@ -12,12 +12,20 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('ventes', function (Blueprint $table) {
-            $table->id();
-            $table->integer('client_id');
+            $table->string('id')->primary(); // ID personnalisé
+            $table->string('client_id'); // Doit correspondre au type de la clé primaire de la table clients
             $table->timestamp('date');
+            $table->date('DateReception')->nullable();
             $table->decimal('montant_total', 10, 2);
+            $table->decimal('MontantRestant', 10, 2)->default(0);
+            $table->decimal('TotalMontantPaye', 10, 2)->default(0);
+            $table->enum('Status', ['direct', 'commande', 'soldée']);
             $table->timestamps();
+        
+            // Définir la clé étrangère
+            $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
         });
+        
     }
 
     /**

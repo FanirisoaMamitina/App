@@ -29,7 +29,7 @@ class Paiement extends Model
         static::creating(function ($paiement) {
             $latestPaiement = self::latest('created_at')->first();
             $nextId = $latestPaiement ? intval(substr($latestPaiement->id, 4)) + 1 : 1;
-            $paiement->id = 'PAY-' . str_pad($nextId, 3, '0', STR_PAD_LEFT);
+            $paiement->id = 'PAY-' . str_pad($nextId, 6, '0', STR_PAD_LEFT);
         });
     }
 
