@@ -16,10 +16,10 @@ function Vente() {
   const [loading, setLoading] = useState(false);
   const [venteList, setVente] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(5); // État pour gérer le nombre d'éléments par page
-  const [searchQuery, setSearchQuery] = useState(''); // État pour la recherche
-  const [startDate, setStartDate] = useState(''); // État pour la date de début
-  const [endDate, setEndDate] = useState(''); // État pour la date de fin
+  const [itemsPerPage, setItemsPerPage] = useState(5); 
+  const [searchQuery, setSearchQuery] = useState(''); 
+  const [startDate, setStartDate] = useState(''); 
+  const [endDate, setEndDate] = useState(''); 
 
   useEffect(() => {
     getVentes();

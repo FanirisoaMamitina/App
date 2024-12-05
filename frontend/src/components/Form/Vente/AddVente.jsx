@@ -7,12 +7,15 @@ function AddVente() {
 
   const [listeProduits, setListeProduits] = useState([])
   const [clients, setClients] = useState([]);
+  const [isLoad, setIsLoad] = useState(false);
 
   useEffect(() => {
+    setIsLoad(true)
     axiosClient.get('/get-produits-disponibles').then(res => {
       if (res.status === 200) {
         setListeProduits(res.data.product);
       }
+      setIsLoad(false)
     });
   }, [])
 
@@ -26,7 +29,7 @@ function AddVente() {
 
   return (
     <div>
-      <ProductSelector products={listeProduits} clients={clients} />
+      <ProductSelector products={listeProduits} clients={clients} loading={isLoad}/>
     </div>
   );
 }

@@ -95,7 +95,7 @@ const router = createBrowserRouter([
                 element: <AddPaiementById />
             },
             {
-                path:'/facture',
+                path:'/Facture',
                 element: <Facture />
             },
             {

@@ -108,7 +108,7 @@ function EditCategories() {
                         </div>
 
                         <div className="form-group col-md-6">
-                            <label for="NomCat" className='text-textG'>Nom de Categorie</label>
+                            <label htmlFor="NomCat" className='text-textG'>Nom de Categorie</label>
                             <input
                                 type="text"
                                 name='nom_categorie'
@@ -137,8 +137,8 @@ function EditCategories() {
                                 Status
                             </label>
                         </div>
-                        <button type="submit" class="btn btn-primary">
-                            {loader ? <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> : <span>Enregistrer</span>}
+                        <button type="submit" className="btn btn-primary">
+                            {loader ? <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> : <span>Enregistrer</span>}
                         </button>
                     </div>
 

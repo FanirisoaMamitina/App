@@ -1,11 +1,20 @@
-import React from "react";
+import React,{useEffect, useState} from "react";
 import logo from "../assets/image/logo.png";
+import n2words from "n2words";
 
 const InvoiceTemplate = ({ invoiceData }) => {
-  const { companyInfo, customerInfo, invoiceDetails, items, total } = invoiceData;
+  const { companyInfo, customerInfo, invoiceDetails, items, total ,reste,paiements } = invoiceData;
 
-  // Convertir le total en nombre avant d'utiliser .toFixed
+
   const formattedTotal = parseFloat(total) || 0;
+  const formattedReste = parseFloat(reste) || 0;
+  let payer = (total - reste) || 0
+  const formatPayer = parseFloat(payer) 
+  const [words, setWords] = useState("");
+  useEffect(() => {
+    const result = n2words(formattedTotal, { lang: "fr" });
+    setWords(result)
+  },[total])
 
   return (
     <div className="max-w-4xl mx-auto p-8 bg-white shadow-lg">
@@ -18,9 +27,9 @@ const InvoiceTemplate = ({ invoiceData }) => {
           </div>
         </div>
         <div className="text-right">
-          <h2 className="text-2xl font-semibold">Facture {companyInfo.name}</h2>
-          <p>Date facturation : {companyInfo.address}</p>
-          <p>Code client : {companyInfo.email}</p>
+          <h2 className="text-2xl font-semibold">Facture {invoiceDetails.number}</h2>
+          <p>Date facturation : {new Date(invoiceDetails.date).toLocaleString()}</p>
+          <p>Code client : {customerInfo.id}</p>
         </div>
       </header>
 
@@ -28,10 +37,10 @@ const InvoiceTemplate = ({ invoiceData }) => {
         <div>
           <h3 className="text-[16px] mb-2">Emmetteur :</h3>
           <div className="px-4 py-2 bg-gray-200 w-[330px] h-[180px]">
-            <h3 className="text-[16px] font-semibold">Computer Store</h3>
-            <p>Ampasambazaha 301 Fianarantsoa</p>
-            <p>034 06 261 75</p>
-            <p>computerstore.net1@gmail.com</p>
+            <h3 className="text-[16px] font-semibold">{companyInfo.name}</h3>
+            <p>{companyInfo.address}</p>
+            <p>{companyInfo.tel}</p>
+            <p>{companyInfo.email}</p>
           </div>
         </div>
         <div>
@@ -39,10 +48,10 @@ const InvoiceTemplate = ({ invoiceData }) => {
           <div className="px-4 py-2 border-1 border-gray-600 w-[330px] h-[180px]">
             <h3 className="text-[16px] font-semibold">Client Informatique Fianar</h3>
             <p>
-              <span >Mr Mamitina</span>
+              <span >{customerInfo.name}</span>
             </p>
             <p>
-              <span>034 12 134 07</span>
+              <span>{customerInfo.tel}</span>
             </p>
           </div>
         </div>
@@ -70,10 +79,10 @@ const InvoiceTemplate = ({ invoiceData }) => {
             items.map((item, index) => (
               <tr key={index} className="text-center">
                 <td className="border px-8 py-2 text-gray-950">{item.description}</td>
-                <td className="border px-4 py-2 text-gray-950">{item.quantity}</td>
-                <td className="border px-4 py-2 text-gray-950">{item.quantity}</td>
+                <td className="border px-4 py-2 text-gray-950">0%</td> {/* TVA 20% par exemple */}
                 <td className="border px-4 py-2 text-gray-950">{parseFloat(item.unitPrice).toFixed(2)}</td>
-                <td className="border px-4 py-2 text-gray-950">{(item.quantity * item.unitPrice).toFixed(2)}</td>
+                <td className="border px-4 py-2 text-gray-950">{item.quantity}</td>
+                <td className="border px-4 py-2 text-gray-950">{item.total}</td>
               </tr>
             ))
           ) : (
@@ -94,8 +103,8 @@ const InvoiceTemplate = ({ invoiceData }) => {
           <div>
             <h3 className="text-[16px] flex items-center justify-between"><span>Total HT: </span> <span>{formattedTotal.toFixed(2)} Ar</span></h3>
             <h3 className="text-[16px] flex items-center justify-between"><span>Total TTC: </span> <span>{formattedTotal.toFixed(2)} Ar</span></h3>
-            <h3 className="text-[16px] flex items-center justify-between"><span>Payé: </span> <span>{formattedTotal.toFixed(2)} Ar</span></h3>
-            <h3 className="text-[16px] flex items-center justify-between"><span>Reste à payer:</span> <span>{formattedTotal.toFixed(2)} Ar</span></h3>
+            <h3 className="text-[16px] flex items-center justify-between"><span>Payé: </span> <span>{formatPayer.toFixed(2)} Ar</span></h3>
+            <h3 className="text-[16px] flex items-center justify-between"><span>Reste à payer:</span> <span> {"  "+formattedReste.toFixed(2)} Ar</span></h3>
           </div>
         </div>
 
@@ -110,12 +119,22 @@ const InvoiceTemplate = ({ invoiceData }) => {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td className="border px-4">11/12/24</td>
-                <td className="border px-4">2000000</td>
-                <td className="border px-4">Espece</td>
-                <td className="border px-4">REF123</td>
-              </tr>
+              {paiements && paiements.length > 0 ? (
+                paiements.map((payment, index) => (
+                  <tr key={index}>
+                    <td className="border px-4 py-2 text-gray-950">{payment.DatePaiement}</td>
+                    <td className="border px-4 py-2 text-gray-950">{parseFloat(payment.MontantPaye).toFixed(2)} Ar</td>
+                    <td className="border px-4 py-2 text-gray-950">{payment.ModePaiement}</td>
+                    <td className="border px-4 py-2 text-gray-950">{payment.Ref || 'N/A'}</td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="4" className="border px-4 py-2 text-center text-gray-500">
+                    Aucun paiement disponible
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
@@ -124,7 +143,7 @@ const InvoiceTemplate = ({ invoiceData }) => {
       </footer>
 
       <div className="text-right mt-16">
-        <p>Arret de la Facture de somme de </p>
+        <p>Arret de la Facture de somme de {words} Ariary</p>
       </div>
 
     </div>

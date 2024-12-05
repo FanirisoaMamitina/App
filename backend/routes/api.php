@@ -63,10 +63,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('ventes/{id}', [VenteController::class, 'getInfoById']);
     Route::post('store-vente', [VenteController::class, 'store']);
     Route::get('lastId', [VenteController::class], 'lastId');
-    Route::get('vente-paiements/{id}', [VenteController::class, 'getInfoVentePaiementById']);
 
     //Paiement
     Route::post('store-paiement', [PaiementController::class, 'store']);
+    Route::get('facture-details/{id}', [PaiementController::class, 'getFactureDetails']);
     Route::post('store-facture',[PaiementController::class, 'storeFacture']);
 
     //Dashboard

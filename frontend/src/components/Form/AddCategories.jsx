@@ -76,7 +76,7 @@ function AddCategories() {
                         </div>
 
                         <div className="form-group col-md-6">
-                            <label for="NomCat" className='text-textG'>Nom de Categorie</label>
+                            <label htmlFor="NomCat" className='text-textG'>Nom de Categorie</label>
                             <input
                                 type="text"
                                 name='nom_categorie'
@@ -101,12 +101,12 @@ function AddCategories() {
                                 onChange={(e) => setCategorie({ ...categorieInput, status_categorie: e.target.checked ? '1' : '0' })}
                                 checked={categorieInput.status_categorie === '1'}
                             />
-                            <label className="form-check-label text-textG" for="gridCheck">
+                            <label className="form-check-label text-textG" htmlFor="gridCheck">
                                 Status
                             </label>
                         </div>
-                        <button type="submit" class="btn btn-primary">
-                            {load == 'on' ? <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> : <span>Enregistrer</span>}
+                        <button type="submit" className="btn btn-primary">
+                            {load == 'on' ? <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> : <span>Enregistrer</span>}
                         </button>
                     </div>
 

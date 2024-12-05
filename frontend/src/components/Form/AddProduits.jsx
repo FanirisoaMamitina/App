@@ -127,9 +127,9 @@ function AddProduits() {
             <div className='form-group col-md-6'>
               <div className="flex items-center gap-3 mt-3">
                 <div>
-                  <label for="selc" className='text-textG'>Categorie</label>
-                  <select name="categorie_id" for="selc" className="relative block w-full shadow-sm shadow-black appearance-none rounded-lg px-3 py-[10px] text-white placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm bg-dark-primary border-3 border-teal-950" onChange={handleInput} value={produitInput.categorie_id}>
-                    <option selected>...</option>
+                  <label htmlFor="selc" className='text-textG'>Categorie</label>
+                  <select name="categorie_id" htmlFor="selc" className="relative block w-full shadow-sm shadow-black appearance-none rounded-lg px-3 py-[10px] text-white placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm bg-dark-primary border-3 border-teal-950" onChange={handleInput} value={produitInput.categorie_id}>
+                    <option value={0}>...</option>
                     {
                       categoryList.map((item) => {
                         return (
@@ -144,7 +144,7 @@ function AddProduits() {
                 </div>
 
                 <div>
-                  <label for="NomCat" className='text-textG'>Nom</label>
+                  <label htmlFor="NomCat" className='text-textG'>Nom</label>
                   <input
                     onChange={handleInput} value={produitInput.nom_produit}
                     type="text"
@@ -159,7 +159,7 @@ function AddProduits() {
                 </div>
               </div>
               <div>
-                <label for="NomCat" className='text-textG'>Marque</label>
+                <label htmlFor="NomCat" className='text-textG'>Marque</label>
                 <input
                   onChange={handleInput} value={produitInput.marque_produit}
                   type="text"
@@ -172,7 +172,7 @@ function AddProduits() {
                 )}
               </div>
               <div className="mb-3">
-                <label for="exampleFormControlTextarea1" className="form-label text-textG">Description</label>
+                <label htmlFor="exampleFormControlTextarea1" className="form-label text-textG">Description</label>
                 <textarea className="relative block w-full shadow-sm shadow-black appearance-none rounded-lg px-3 py-[10px] text-white placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm bg-dark-primary border-3 border-teal-950" id="exampleFormControlTextarea1" name="description_produit" onChange={handleInput} value={produitInput.description_produit} rows="3"></textarea>
               </div>
 
@@ -191,7 +191,7 @@ function AddProduits() {
             <div className='form-group col-md-6'>
               <div className="mt-3">
                 <div>
-                  <label for="prix_original" className='text-textG'>Prix</label>
+                  <label htmlFor="prix_original" className='text-textG'>Prix</label>
                   <input
                     onChange={handleInput} value={produitInput.prix_original}
                     type="number"
@@ -207,7 +207,7 @@ function AddProduits() {
               </div>
 
               <div className="mt-3">
-                <label for="stock" className='text-textG'>Quantité en stock</label>
+                <label htmlFor="stock" className='text-textG'>Quantité en stock</label>
                 <input
                   onChange={handleInput} value={produitInput.stock}
                   type="number"
@@ -225,7 +225,7 @@ function AddProduits() {
           </div>
           <div className="flex items-center justify-end mt-4">
             <button type="submit" className="btn btn-primary">
-              {load == 'on' ? <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> : <span>Enregistrer</span>}
+              {load == 'on' ? <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> : <span>Enregistrer</span>}
             </button>
           </div>
 

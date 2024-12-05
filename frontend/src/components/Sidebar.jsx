@@ -117,12 +117,6 @@ function Sidebar() {
                       </div>
                     ))
                   }
-                  <li>
-                    <NavLink className={'text-decoration-none text-textG link'} to={"/facture"} >
-                      <AiOutlineFileText size={23} className="min-w-max" />
-                      Facture
-                    </NavLink>
-                  </li>
                 </div>
               )
             }

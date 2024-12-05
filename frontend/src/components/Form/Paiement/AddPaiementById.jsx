@@ -5,6 +5,7 @@ import CountUp from "react-countup";
 import axiosClient from "../../../axios-client";
 
 function AddPaiementById() {
+    const { state } = useLocation();
     const { id: idVenteParam } = useParams();
     const navigate = useNavigate();
 
@@ -55,6 +56,7 @@ function AddPaiementById() {
             MontantPaye: montant,
             ModePaiement: modePaiement,
             Ref: reference,
+            isFacture: isChecked,
         };
 
         axiosClient
@@ -78,7 +80,21 @@ function AddPaiementById() {
                         icon: "success",
                         title: res.data.message,
                     });
-                    navigate("/Vente/List Vente");
+                    if (isChecked) {
+                        navigate("/Facture", {
+                            state: {
+                                // venteId: state?.idVente,
+                                vente: res.data.vente,
+                                date: res.data.date,
+                                factureId: res.data.idFacture,
+                                client: details.clients,
+                                totalAmount: details.montant_total,
+                                montantPayer: state?.montantPayer,
+                            },
+                        });
+                    } else {
+                        navigate('/Vente/List Vente');
+                    }
                 } else if (res.data.status === 400) {
                     setPaiementErrors(res.data.errors);
                 }
@@ -88,6 +104,11 @@ function AddPaiementById() {
                 console.error("Erreur lors de l'envoi des données : ", error);
                 setLoad("off");
             });
+    };
+
+    const [isChecked, setIsChecked] = useState(false);
+    const handleCheckboxChange = (event) => {
+        setIsChecked(event.target.checked);
     };
 
     if (!details) {
@@ -198,7 +219,7 @@ function AddPaiementById() {
                 <div className="flex items-center justify-between mt-5">
                     <div>
                         <label htmlFor="chek" className="text-textG mx-3">Facturé</label>
-                        <input type="checkbox" name="" id="chek" className="form-check-input" />
+                        <input type="checkbox" onChange={handleCheckboxChange} name="" id="chek" className="form-check-input" />
                     </div>
                     <button
                         type="submit"

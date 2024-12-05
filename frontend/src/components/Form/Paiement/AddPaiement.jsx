@@ -24,26 +24,18 @@ function AddPaiement() {
     const [allData, setAllData] = useState({});
     const [idFac, setIdFac] = useState();
 
-    const storeFacture = (idPaiement) => {
-        axiosClient.post('/store-facture', idPaiement).then((res) => {
-            if (res.data.status === 200) {
-                setIdFac(res.data.idFacture);
-                console.log(res.data.idFacture);
-            }
-        })
-    }
-
     const handleSubmit = (e) => {
         e.preventDefault();
-        setLoad("on")
-
+        setLoad("on");
+    
         const data = {
             idVente: state?.idVente,
             MontantPaye: montant,
             ModePaiement: modePaiement,
             Ref: reference,
+            isFacture: isChecked, // Indique si une facture doit être créée
         };
-
+    
         axiosClient.post("/store-paiement", data).then((res) => {
             if (res.data.status === 200) {
                 const Toast = swal.mixin({
@@ -63,34 +55,33 @@ function AddPaiement() {
                     icon: "success",
                     title: res.data.message,
                 });
+    
                 if (isChecked) {
-                    storeFacture({ idPaiement: res.data.idPaiement });
-                    axiosClient.get(`/vente-paiements/${data.idVente}`)
-                        .then(res => {
-                            if (res.status === 200) {
-                                setAllData(res.data.vente);
-                                console.log(res.data.vente)
-                                const det = {
-                                    datt:res.data.vente,
-                                }
-                                console.log(det)
-                            }
-                        });
-                    navigate("/Facture", { state: data }); // Redirection vers page1 avec `state`
+                    navigate("/Facture", {
+                        state: {
+                            venteId: state?.idVente,
+                            vente: res.data.vente,
+                            date: res.data.date,
+                            factureId: res.data.idFacture,
+                            client: state?.client,
+                            totalAmount: state?.totalAmount,
+                            montantPayer: state?.montantPayer,
+                        },
+                    });
                 } else {
                     navigate('/Vente/List Vente');
                 }
-
             } else if (res.data.status === 400) {
                 setPaiementErrors(res.data.errors);
             }
-
+    
             setLoad("off");
         }).catch((error) => {
             console.error("Erreur lors de l'envoi des données : ", error);
             setLoad("off");
         });
-    }
+    };
+    
 
     useEffect(() => {
         if (state.status === "direct") {

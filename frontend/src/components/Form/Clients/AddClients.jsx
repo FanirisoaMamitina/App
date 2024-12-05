@@ -113,7 +113,7 @@ function AddClients() {
                     </div>
                     <div className="flex justify-end mt-4">
                         <button type="submit" className="btn btn-primary">
-                            {load == 'on' ? <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> : <span>Enregistrer</span>}
+                            {load == 'on' ? <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> : <span>Enregistrer</span>}
                         </button>
                     </div>
 

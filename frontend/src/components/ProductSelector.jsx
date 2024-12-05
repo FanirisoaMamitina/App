@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Switch, Input, Button, Dialog, DialogPanel, DialogTitle } from '@headlessui/react'
 import clsx from 'clsx'
 import { Autocomplete, TextField } from '@mui/material';
@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import axiosClient from "../axios-client";
 import swal from 'sweetalert2';
 
-function ProductSelector({ products, clients }) {
+function ProductSelector({ products, clients, loading }) {
     const [searchTerm, setSearchTerm] = useState("");
     const [filteredProducts, setFilteredProducts] = useState(products);
     const [productList, setProductList] = useState([]);
@@ -20,18 +20,28 @@ function ProductSelector({ products, clients }) {
     const [dateReception, setDateReception] = useState("");
 
     const handleDateChange = (event) => {
-      setDateReception(event.target.value); 
+        setDateReception(event.target.value);
     };
     // Gestion recherche produit
     const handleSearchChange = (e) => {
         const term = e.target.value.toLowerCase();
         setSearchTerm(term);
-        setFilteredProducts(
-            products.filter((product) =>
-                product.nom_produit.toLowerCase().includes(term)
-            )
-        );
+        if (term.trim() === "") {
+            setFilteredProducts(products); // Afficher tous les produits si la recherche est vide
+        } else {
+            setFilteredProducts(
+                products.filter((product) =>
+                    product.category.nom_categorie.toLowerCase().includes(term) || product.nom_produit.toLowerCase().includes(term)
+                )
+            );
+        }
     };
+
+    // Initialiser filteredProducts avec tous les produits lors du chargement
+    useEffect(() => {
+        setFilteredProducts(products);
+    }, [products]);
+
 
     const handleNewClientChange = (e) => {
         e.persist();
@@ -77,10 +87,49 @@ function ProductSelector({ products, clients }) {
         return productList.reduce((total, product) => total + calculateAmount(product), 0);
     };
 
+    const findProductsWithNoBenefit = () => {
+        return productList.filter((product) => calculateBenefit(product) <= 0);
+    };
+    
+    const isDateReceptionValid = (dateReception) => {
+        const today = new Date();
+        const receptionDate = new Date(dateReception);
+        return receptionDate > today;
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
+
+        const problematicProducts = findProductsWithNoBenefit();
+
+        if (problematicProducts.length > 0) {
+            const productNames = problematicProducts.map((product) => product.nom_produit || product.id).join(", ");
+    
+            swal.fire({
+                title: "Attention!",
+                text: `Les produits suivants ont un bénéfice nul ou négatif : ${productNames}. Veuillez vérifier leurs prix.`,
+                icon: "warning",
+                background: '#333',
+                color: 'white',
+                confirmButtonColor: '#3085d6'
+            });
+            return; 
+        }
+
+        if (!isImmediatePayment && !isDateReceptionValid(dateReception)) {
+            swal.fire({
+                title: "Erreur de date!",
+                text: "La date de réception doit être postérieure à la date actuelle pour une commande.",
+                icon: "error",
+                background: '#333',
+                color: 'white',
+                confirmButtonColor: '#3085d6'
+            });
+            return;
+        }
+
         setLoad("on")
-       
+
         const dataToSend = {
             client: !isExistingClient ? selectedClient.id : newClient,
             products: productList.map((product) => ({
@@ -93,9 +142,9 @@ function ProductSelector({ products, clients }) {
             totalAmount: calculateTotalAmount(),
             montantPayer: 0,
             status: isImmediatePayment ? "direct" : "commande",
-            DateReception: !isImmediatePayment ? dateReception : '', 
+            DateReception: !isImmediatePayment ? dateReception : '',
         };
-        
+
 
         // Envoi des données au backend
         axiosClient.post('/store-vente', dataToSend)
@@ -211,7 +260,10 @@ function ProductSelector({ products, clients }) {
 
                     {!isExistingClient ? (
                         <Autocomplete
-                            options={clients}
+                            options={clients.filter(
+                                (client, index, self) =>
+                                    index === self.findIndex((c) => c.nom === client.nom && c.tel === client.tel)
+                            )}
                             getOptionLabel={(option) => `${option.nom} (${option.tel})`}
                             value={selectedClient}
                             onChange={(event, newValue) => setSelectedClient(newValue)}
@@ -232,6 +284,7 @@ function ProductSelector({ products, clients }) {
                                 />
                             )}
                         />
+
                     ) : (
                         <>
                             <input
@@ -265,25 +318,36 @@ function ProductSelector({ products, clients }) {
                         placeholder="Rechercher un produit..."
                         className="relative block w-full shadow-sm shadow-black appearance-none rounded-lg pl-[10px] py-[10px] text-white placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm bg-dark-primary border-3 border-teal-950 mt-[18px]"
                     />
-                    <div
-                        className="max-h-[150px] scrollbar-none scrollbar-track-dark-second scrollbar-thumb-gray-line hover:scrollbar-thin overflow-y-auto border-3 border-teal-950 shadow-sm shadow-black appearance-none rounded-lg bg-dark-second text-textG"
-                    >
-                        {filteredProducts.length > 0 ? (
-                            filteredProducts.map((product) => (
-                                <div
-                                    key={product.id}
-                                    onClick={() => handleAddProduct(product.id)}
-                                    className="p-2 hover:bg-gray-800 cursor-pointer"
-                                >
-                                    {product.category.nom_categorie}  {product.nom_produit} (Prix d'origine: {product.prix_original} Ar Stock: {product.stock})
-                                </div>
-                            ))
-                        ) : (
+                    {loading ? (
+                        <div
+                            className="max-h-[150px] scrollbar-none scrollbar-track-dark-second scrollbar-thumb-gray-line hover:scrollbar-thin overflow-y-auto border-3 border-teal-950 shadow-sm shadow-black appearance-none rounded-lg bg-dark-second text-textG"
+                        >
                             <div className="text-gray-500 text-center">
-                                Aucun produit trouvé
+                                Chargement...
                             </div>
-                        )}
-                    </div>
+                        </div>
+                    ) : (
+                        <div
+                            className="max-h-[150px] animated fadeInDown scrollbar-none scrollbar-track-dark-second scrollbar-thumb-gray-line hover:scrollbar-thin overflow-y-auto border-3 border-teal-950 shadow-sm shadow-black appearance-none rounded-lg bg-dark-second text-textG"
+                        >
+                            {filteredProducts.length > 0 ? (
+                                filteredProducts.map((product) => (
+                                    <div
+                                        key={product.id}
+                                        onClick={() => handleAddProduct(product.id)}
+                                        className="p-2 hover:bg-gray-800 cursor-pointer"
+                                    >
+                                        {product.category.nom_categorie}  {product.nom_produit} (Prix d'origine: {product.prix_original} Ar Stock: {product.stock})
+                                    </div>
+                                ))
+                            ) : (
+                                <div className="text-gray-500 text-center">
+                                    Aucun produit trouvé
+                                </div>
+                            )}
+                        </div>
+                    )}
+
                 </div>
             </div>
 
@@ -417,7 +481,7 @@ function ProductSelector({ products, clients }) {
                                         type="date"
                                         id="date-reception"
                                         value={dateReception}
-                                        onChange={handleDateChange}    
+                                        onChange={handleDateChange}
                                         className="relative block w-full shadow-sm shadow-black appearance-none rounded-lg pl-[10px] py-[10px] text-white placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm bg-dark-primary border-3 border-teal-950 animated fadeInDown"
                                     />
                                 </>
@@ -448,7 +512,7 @@ function ProductSelector({ products, clients }) {
                                 type="submit"
                                 className="bg-blue-600 text-white px-4 py-2 rounded"
                             >
-                                {load == 'on' ? <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> : <span>Confirmer</span>}
+                                {load == 'on' ? <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> : <span>Confirmer</span>}
                             </button>
 
                         </div>

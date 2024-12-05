@@ -97,8 +97,8 @@ function Categories() {
         <div className='animated fadeInDown'>
           <div className='flex items-center justify-between mb-4 mx-4'>
             <div className='w-44 flex items-center gap-3'>
-              <label for="inputState" className='text-textG'>State</label>
-              <select id="inputState" class="form-control">
+              <label htmlFor="inputState" className='text-textG'>State</label>
+              <select id="inputState" className="form-control">
                 {
                   statusSelect.map(m => (
                     <option key={m.key}>{m.name}</option>
@@ -107,7 +107,7 @@ function Categories() {
               </select>
             </div>
 
-            <button type="button" class="btn btn-success"><PiMicrosoftExcelLogoFill /></button>
+            <button type="button" className="btn btn-success"><PiMicrosoftExcelLogoFill /></button>
 
           </div>
 
@@ -123,7 +123,7 @@ function Categories() {
             {loading &&
               <tbody>
                 <tr>
-                  <td colSpan="5" class="text-center">
+                  <td colSpan="5" className="text-center">
                     Chargement...
                   </td>
                 </tr>

@@ -10,128 +10,46 @@ import Spinner from 'react-bootstrap/Spinner';
 
 const Facture = () => {
   const location = useLocation();
-  const { client, vente, produits } = location.state || {};
+  const { venteId, factureId, client, totalAmount, vente ,date} = location.state || {};
 
+
+  const [idFacture, setIdFacture] = useState('');
   const [infoCli, setInfoCli] = useState({});
   const [infoPro, setInfoPro] = useState([]);
   const [idVente, setIdVente] = useState('');
 
+
   const [load, setLoad] = useState('off');
-
-  useEffect(() => {
-    if (vente && vente.client) {
-      getCli(vente.client);
-      axiosClient.get('/getIdMax').then(res => {
-        if (res.status === 200) {
-          setIdVente(res.data.venteId);
-          console.log(idVente);
-        }
-      });
-    }
-    if (produits && produits.length > 0) {
-      loadProductDetails();
-    }
-  }, [vente, produits]);
-
- 
-  const getCli = (id) => {
-    setLoad('on')
-    axiosClient.get(`/get-client/${id}`).then((res) => {
-      if (res.data.status === 200) {
-        setInfoCli(res.data.client);
-      } else if (res.data.status === 404) {
-        swal.fire({
-          icon: "error",
-          title: "Oops...",
-          text: res.data.message,
-        });
-      }
-      setLoad('off')
-    });
-  };
-  const loadProductDetails = () => {
-    const productPromises = produits.map((p) =>
-      axiosClient.get(`/get-produit/${p.produit}`).then((res) => {
-        if (res.data.status === 200) {
-          return { ...p, ...res.data.product };
-        } else {
-          swal.fire({
-            icon: "error",
-            title: "Oops...",
-            text: `Erreur lors du chargement du produit avec ID ${p.produit}`,
-          });
-          return null;
-        }
-      })
-    );
-
-    Promise.all(productPromises).then((loadedProducts) => {
-      setInfoPro(loadedProducts.filter((p) => p !== null)); 
-    });
-  };
 
   const invoiceData = {
     companyInfo: {
-      name: "Ma Société",
-      address: "123 Rue de la Paix, Paris",
-      email: "contact@masociete.com",
+      name: "Computer Store",
+      address: "Ampasambazaha 301 Fianarantsoa",
+      tel: "034 06 261 75",
+      email: "computerstore.net1@gmail.com",
     },
     customerInfo: {
-      name: infoCli.nom,
-      email: infoCli.tel,
+     id: vente.clients.id ? vente.clients.id : "inconnu",
+      name: client.nom,
+      tel: client.tel,
     },
     invoiceDetails: {
-      number: idVente ? 'INV-' + idVente : 'INV-0000',
-      date: vente ? vente.date : new Date().toISOString().substring(0, 10),
+      number: factureId ? factureId : 'FA0000-0000',
+      date: date ? date : new Date().toISOString().substring(0, 10),
     },
-    items: infoPro.map((p) => ({
-      description: p.category.nom_categorie + " " + p.nom_produit, 
+    items: vente && vente.detaille__vente ? vente.detaille__vente.map((p) => ({
+      description: `${p.produits.category.nom_categorie} ${p.produits.nom_produit}`,
       quantity: p.quantite,
-      unitPrice: p.prix,
-    })),
-    total: vente ? vente.montant_total : 0,
+      unitPrice: p.prix_unitaire,
+      total: (parseFloat(p.prix_unitaire) * p.quantite).toFixed(2),
+    })) : [],
+    paiements: vente.paiements,
+    total: totalAmount ? totalAmount : 0,
+    reste: vente.MontantRestant ? vente.MontantRestant : 0,
+    payer: totalAmount - vente.MontantRestant,
   };
 
   const invoiceRef = useRef();
-
-  // const Print = () => {
-  //   const element = invoiceRef.current;
-  //   const printWindow = window.open('', '_blank', 'width=800,height=600');
-
-  //   printWindow.document.write(`
-  //     <html>
-  //       <head>
-  //         <title>Facture</title>
-  //         <style>
-  //           /* Ajouter ici les styles spécifiques à la facture si nécessaire */
-  //           body {
-  //             font-family: Poppins, sans-serif;
-  //             margin: 20px;
-  //           }
-  //           table {
-  //             width: 100%;
-  //             border-collapse: collapse;
-  //           }
-  //           table, th, td {
-  //             border: 1px solid black;
-  //           }
-  //           th, td {
-  //             padding: 10px;
-  //             text-align: left;
-  //           }
-  //         </style>
-  //       </head>
-  //       <body>
-  //         ${element.outerHTML}
-  //       </body>
-  //     </html>
-  //   `);
-
-  //   printWindow.document.close();
-  //   printWindow.focus();
-  //   printWindow.print();
-  //   printWindow.close();
-  // };
 
 
   const generatePDF = () => {
@@ -226,12 +144,12 @@ const Facture = () => {
         }
       },
     });
-  
+
     if (email) {
       generatePDFMail(email);
     }
   };
-  
+
 
 
   return (

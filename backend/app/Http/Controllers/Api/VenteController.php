@@ -19,7 +19,7 @@ class VenteController extends Controller
     {
         $ventes = Ventes::with([
             'clients',
-            'detaille_Vente.produits' // Inclure les produits dans les détails de vente
+            'detaille_Vente.produits' 
         ])
             ->orderBy('date', 'desc')
             ->get();
@@ -29,7 +29,7 @@ class VenteController extends Controller
 
     public function lastId()
     {
-        $venteId = Ventes::max('id'); // Assurez-vous que la table `ventes` contient bien une colonne `id`
+        $venteId = Ventes::max('id'); 
 
         return response()->json([
             'status' => 200,
@@ -39,9 +39,9 @@ class VenteController extends Controller
 
     public function store(Request $request)
     {
-        // Validation des données reçues
+       
         $validatedData = $request->validate([
-            'client' => 'required', // Validation minimale, vérifier plus en détail selon vos besoins
+            'client' => 'required', 
             'products' => 'required|array',
             'products.*.id' => 'required|exists:produits,id',
             'products.*.quantity' => 'required|integer|min:1',
@@ -51,7 +51,6 @@ class VenteController extends Controller
             'totalAmount' => 'required|numeric',
             'montantPayer' => 'required|numeric|min:0',
             'status' => 'required|in:direct,commande',
-            //'date_vente' => 'required|date',
         ]);
 
         // Vérification des stocks pour chaque produit
