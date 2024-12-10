@@ -2,16 +2,18 @@ import React, { useEffect, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import logo from '../assets/image/logo.png'
 import { delay, motion } from 'framer-motion'
-import { IoIosArrowBack, IoMdMenu } from 'react-icons/io'
+import { IoIosArrowBack, IoMdMenu ,IoMdCash} from 'react-icons/io'
 import { AiOutlineAppstore } from 'react-icons/ai'
 import { BiPackage, BiBriefcaseAlt2, BiBell } from 'react-icons/bi';
 import { BsPerson } from 'react-icons/bs';
 import { FiShoppingBag, FiShoppingCart } from 'react-icons/fi';
 import { AiOutlineFileText, AiOutlineHistory } from 'react-icons/ai';
 import { RiSettings4Line } from 'react-icons/ri';
+import { TbCashRegister,TbCashBanknote  } from "react-icons/tb";
 import { ChevronRightIcon } from '@heroicons/react/16/solid';
 import SubMenu from './SubMenu'
 import { useMediaQuery } from 'react-responsive'
+import { IoCashOutline } from 'react-icons/io5'
 
 function Sidebar() {
 
@@ -117,6 +119,10 @@ function Sidebar() {
                       </div>
                     ))
                   }
+                  <NavLink className={'text-decoration-none text-textG link'} to={"/paiement"} >
+                    <TbCashBanknote   size={23} className="min-w-max" />
+                    Paiement
+                  </NavLink>
                 </div>
               )
             }

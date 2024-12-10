@@ -48,17 +48,17 @@ function Dashboard() {
     <table className="min-w-full bg-[#1B1B1B] border border-gray-700 rounded-lg overflow-hidden">
       <thead>
         <tr className="bg-gray-700">
-          <th className="px-4 py-2 border-b border-gray-700 text-gray-300">Nom du Produit</th>
-          <th className="px-4 py-2 border-b border-gray-700 text-gray-300">Description</th>
-          <th className="px-4 py-2 border-b border-gray-700 text-gray-300">Ventes</th>
+          <th className="border-b border-gray-700 text-gray-300">Nom du Produit</th>
+          <th className="border-b border-gray-700 text-gray-300">Description</th>
+          <th className="border-b border-gray-700 text-gray-300">Ventes</th>
         </tr>
       </thead>
       <tbody>
         {produitsLesPlusVendus.map((produit) => (
           <tr key={produit.produit_id} className="hover:bg-gray-800">
-            <td className="px-4 py-2 border-b border-gray-700 text-gray-400">{produit.produits.nom_produit}</td>
-            <td className="px-4 py-2 border-b border-gray-700 text-gray-400">{produit.produits.description_produit}</td>
-            <td className="px-4 py-2 border-b border-gray-700 text-gray-400">{produit.total_vendus}</td>
+            <td className="border-b border-gray-700 text-gray-400">{produit.produits.nom_produit}</td>
+            <td className="border-b border-gray-700 text-gray-400">{produit.produits.description_produit}</td>
+            <td className="border-b border-gray-700 text-gray-400">{produit.total_vendus}</td>
           </tr>
         ))}
       </tbody>
@@ -294,22 +294,22 @@ function Dashboard() {
             <table className="min-w-full bg-[#1B1B1B] border border-gray-700 rounded-lg overflow-hidden">
               <thead>
                 <tr className="bg-indigo-600">
-                  <th className="px-4 py-2 border-b border-gray-700 text-gray-300">Date</th>
-                  <th className="px-4 py-2 border-b border-gray-700 text-gray-300">Client</th>
-                  <th className="px-4 py-2 border-b border-gray-700 text-gray-300">Produits</th>
-                  <th className="px-4 py-2 border-b border-gray-700 text-gray-300">Total</th>
+                  <th className="border-b border-gray-700 text-gray-300">Date</th>
+                  <th className="border-b border-gray-700 text-gray-300">Client</th>
+                  <th className="border-b border-gray-700 text-gray-300">Produits</th>
+                  <th className="border-b border-gray-700 text-gray-300">Total</th>
                 </tr>
               </thead>
               <tbody>
                 {historiqueVentes.map((vente) => (
                   <tr key={vente.id} className="hover:bg-gray-800">
-                    <td className="px-4 py-2 border-b border-gray-800 text-gray-400">
+                    <td className="border-b border-gray-800 text-gray-400">
                       {new Date(vente.date).toLocaleDateString()} {/* Formater la date */}
                     </td>
-                    <td className="px-4 py-2 border-b border-gray-800 text-gray-400">
+                    <td className="border-b border-gray-800 text-gray-400">
                       {vente.clients?.nom || 'Non spécifié'} {/* Nom du client */}
                     </td>
-                    <td className="px-4 py-2 border-b border-gray-800 text-gray-400">
+                    <td className="border-b border-gray-800 text-gray-400">
                       {vente.detaille__vente.map((detail) => (
                         <div key={detail.id}>
                           {detail.produits?.nom_produit || 'Produit inconnu'} {" "}
@@ -317,7 +317,7 @@ function Dashboard() {
                         </div>
                       ))}
                     </td>
-                    <td className="px-4 py-2 border-b border-gray-800 text-gray-400">
+                    <td className="border-b border-gray-800 text-gray-400">
                       {vente.montant_total.toLocaleString()} Ar {/* Montant total formaté */}
                     </td>
                   </tr>

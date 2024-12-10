@@ -27,11 +27,11 @@ export default function Action({ data }) {
           className="w-52 rounded-xl border border-white/5 bg-dark-second p-1 text-sm/6 text-white transition duration-100 ease-out [--anchor-gap:var(--spacing-1)] focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0"
         >
           <MenuItem>
-            <button className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3 data-[focus]:bg-white/10">
+            <Link to={`/Vente/Details/${data.id}`} className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3 data-[focus]:bg-white/10 text-decoration-none text-white">
               <IoEyeSharp className="size-4 fill-white/30" />
               Voir
               <kbd className="ml-auto hidden font-sans text-xs text-white/50 group-data-[focus]:inline">⌘V</kbd>
-            </button>
+            </Link>
           </MenuItem>
           {!(data.MontantRestant == 0 && data.Status === "soldée") &&
             <MenuItem>

@@ -24,6 +24,8 @@ import EditProduit from "./components/Form/EditProduit.jsx";
 import AddPaiement from "./components/Form/Paiement/AddPaiement.jsx";
 import AddPaiementById from "./components/Form/Paiement/AddPaiementById.jsx";
 import AddFacture from "./components/Form/Facture/AddFacture.jsx";
+import PaiementList from "./views/PaiementList.jsx";
+import DetailsClient from "./views/DetailsClient.jsx";
 
 const router = createBrowserRouter([
     {
@@ -75,6 +77,10 @@ const router = createBrowserRouter([
                 element: <EditClient />
             },
             {
+                path: '/Clients/Details/:id',
+                element: <DetailsClient />
+            },
+            {
                 path:'/Vente/List Vente',
                 element: <Vente />
             },
@@ -85,6 +91,10 @@ const router = createBrowserRouter([
             {
                 path:'/Vente/Add Vente',
                 element: <AddVente />
+            },
+            {
+                path:'/paiement',
+                element: <PaiementList />
             },
             {
                 path:'/Add Paiement',

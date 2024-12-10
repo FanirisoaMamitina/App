@@ -5,11 +5,13 @@ use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\ClientController;
 use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\InvoiceController;
+use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\PaiementController;
 use App\Http\Controllers\Api\ProduitController;
 use App\Http\Controllers\Api\VenteController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
 
 
 /*
@@ -45,6 +47,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('update-client/{id}', [ClientController::class, 'update']);
     Route::delete('delete-client/{id}', [ClientController::class, 'destroy']);
     Route::get('search-client/{key}', [ClientController::class, 'search']);
+    Route::get('get-detail-client/{id}', [ClientController::class, 'getAllInfoById']);
 
 
     //Produits
@@ -61,10 +64,13 @@ Route::middleware('auth:sanctum')->group(function () {
     //Ventes
     Route::get('view-ventes', [VenteController::class, 'index']);
     Route::get('ventes/{id}', [VenteController::class, 'getInfoById']);
+    Route::get('get-detail/{id}', [VenteController::class, 'getInfoVentePaiementById']);
     Route::post('store-vente', [VenteController::class, 'store']);
-    Route::get('lastId', [VenteController::class], 'lastId');
+    // Route::get('lastId', [VenteController::class], 'lastId');
+
 
     //Paiement
+    Route::get('getPaiement',[PaiementController::class, 'index']);
     Route::post('store-paiement', [PaiementController::class, 'store']);
     Route::get('facture-details/{id}', [PaiementController::class, 'getFactureDetails']);
     Route::post('store-facture',[PaiementController::class, 'storeFacture']);
@@ -72,6 +78,8 @@ Route::middleware('auth:sanctum')->group(function () {
     //Dashboard
     Route::get('stats-ventes', [DashboardController::class, 'getStats']);
     Route::get('historique-ventes', [DashboardController::class, 'getHistoriqueVentes']);
+
+    Route::post('/notifications/low-stock/{id}', [NotificationController::class, 'notifyLowStock']);
 
     Route::post('send-invoice', [InvoiceController::class, 'sendInvoice']);
 });

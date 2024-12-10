@@ -63,18 +63,18 @@ function Historique() {
 
 
   return (
-    <div className="car mx-auto  min-h-screen animated fadeInDown">
+    <div className="car animated fadeInDown">
       <h2 className="text-2xl font-semibold mb-6 text-textG">Historique des actions</h2>
       <div className="shadow-lg rounded-lg overflow-hidden">
         <table className="w-full">
           <thead className="bg-indigo-500">
             <tr>
-              <th className="py-3 px-4 text-left text-gray-300">Action</th>
-              <th className="py-3 px-4 text-left text-gray-300">Table</th>
-              <th className="py-3 px-4 text-left text-gray-300">ID de l'élément</th>
-              <th className="py-3 px-4 text-left text-gray-300">Détails</th>
-              <th className="py-3 px-4 text-left text-gray-300">utilisateur</th>
-              <th className="py-3 px-4 text-left text-gray-300">Date</th>
+              <th className=" text-left text-gray-300">Action</th>
+              <th className=" text-left text-gray-300">Table</th>
+              <th className=" text-left text-gray-300">ID de l'élément</th>
+              <th className=" text-left text-gray-300">Détails</th>
+              <th className=" text-left text-gray-300">utilisateur</th>
+              <th className=" text-left text-gray-300">Date</th>
             </tr>
           </thead>
           {loading &&
@@ -90,15 +90,15 @@ function Historique() {
             <tbody className="text-gray-400 animated fadeInDown">
               {historique.map((action, index) => (
                 <tr key={index} className="hover:bg-gray-800 transition">
-                  <td className="py-3 px-4 flex items-center space-x-2">
+                  <td className="flex items-center space-x-2">
                     {getIcon(action.action)}
                     <span className="capitalize">{action.action}</span>
                   </td>
-                  <td className="py-3 px-4">{action.table}</td>
-                  <td className="py-3 px-4">{action.element_id}</td>
-                  <td className="py-3 px-4">{renderDetailsAsList(action.details)}</td>
-                  <td className="py-3 px-4">{action.user ? (action.user.name === userIn.name ? "Vous" : action.user.name ) : 'Utilisateur inconnu'}</td>
-                  <td className="py-3 px-4">
+                  <td>{action.table}</td>
+                  <td>{action.element_id}</td>
+                  <td>{renderDetailsAsList(action.details)}</td>
+                  <td>{action.user ? (action.user.name === userIn.name ? "Vous" : action.user.name ) : 'Utilisateur inconnu'}</td>
+                  <td>
                     {new Date(action.created_at).toLocaleString()}
                   </td>
                 </tr>

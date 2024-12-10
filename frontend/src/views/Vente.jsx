@@ -250,8 +250,6 @@ function Vente() {
                     <td>{v.TotalMontantPaye}</td>
                     <td className='flex items-center gap-2'>
                       <Action data={v} />
-                      {/* <Link to={`/Vente/Details/${v.id}`} className="text-indigo-500 text-xl p-1 rounded-md hover:text-indigo-800 shadow-md shadow-indigo-900 duration-500"><IoEyeSharp /></Link>
-                      <button type='button' onClick={(e) => deleteProduct(e, v.id)} className="text-gray-200 p-1 rounded-md text-xl shadow-md shadow-gray-600 hover:text-gray-500 duration-500"><IoPrintOutline /></button> */}
                     </td>
                   </tr>
                 ))}

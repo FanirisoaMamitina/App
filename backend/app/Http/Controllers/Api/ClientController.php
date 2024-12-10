@@ -19,6 +19,27 @@ class ClientController extends Controller
         ]);
     }
 
+    public function getAllInfoById($id)
+    {
+        $client = Clients::with([
+            'ventes',
+        ])->find($id);
+        if($client)
+        {
+            return response()->json([
+                'status'=>200,
+                'client'=>$client
+            ]);
+        }
+        else 
+        {
+            return response()->json([
+                'status'=>404,
+                'message'=>'No Client Id Found'
+            ]);
+        }
+    }
+
     public function getInfoById($id)
     {
         $client = Clients::find($id);

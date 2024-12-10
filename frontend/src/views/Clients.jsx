@@ -7,6 +7,7 @@ import { PiMicrosoftExcelLogoFill } from "react-icons/pi";
 import { BiDownload, BiPencil, BiSearch, BiTrash } from 'react-icons/bi'
 import axiosClient from '../axios-client';
 import swal from 'sweetalert2';
+import { IoEyeOutline } from 'react-icons/io5';
 
 
 function Clients() {
@@ -24,7 +25,7 @@ function Clients() {
     if (e.target.value == '') {
       setClientsList(searchApiData);
     } else {
-      const filterResult = searchApiData.filter(item => item.nom.toLowerCase().includes(e.target.value.toLowerCase()) ||  item.tel.toLowerCase().includes(e.target.value.toLowerCase()))
+      const filterResult = searchApiData.filter(item => item.nom.toLowerCase().includes(e.target.value.toLowerCase()) || item.tel.toLowerCase().includes(e.target.value.toLowerCase()))
       setClientsList(filterResult);
     }
     setFilterValue(e.target.value);
@@ -136,6 +137,8 @@ function Clients() {
                     <td>{cli.nom}</td>
                     <td>{cli.tel}</td>
                     <td className='flex items-center gap-2'>
+                      <Link to={`/Clients/Details/${cli.id}`} className="text-indigo-500 text-xl p-1 rounded-md hover:text-indigo-800 shadow-md shadow-indigo-900 duration-500"><IoEyeOutline /></Link>
+                      &nbsp; &nbsp;
                       <Link to={`/Clients/Edit Client/${cli.id}`} className="text-yellow-500 text-xl p-1 rounded-md hover:text-yellow-800 shadow-md shadow-yellow-900 duration-500"><FiEdit /></Link>
                       &nbsp; &nbsp;
                       <button type='button' onClick={(e) => deleteClient(e, cli.id)} className="text-red-500 p-1 rounded-md text-xl shadow-md shadow-red-900 hover:text-red-800 duration-500" ><BiTrash /></button>

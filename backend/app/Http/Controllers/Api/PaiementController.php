@@ -12,6 +12,19 @@ use Illuminate\Support\Facades\Validator;
 
 class PaiementController extends Controller
 {
+    public function index()
+    {
+        $paiement = Paiement::with([
+            'vente',
+        ])->orderBy('DatePaiement', 'desc')
+            ->get();
+
+        return response()->json([
+            'status' => 200,
+            'paiement' => $paiement,
+        ]);
+    }
+
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -63,23 +76,21 @@ class PaiementController extends Controller
                 'detaille_Vente.produits.category',
                 'paiements',
             ])->find($paiement['idVente']);
-    
+
             return response()->json([
                 'status' => 200,
                 'message' => 'Paiement ajouté avec succès',
                 'idPaiement' => $paiement->id,
                 'idFacture' => $idFacture,
                 'date' => $dateFact,
-                'vente'=>$venteDetails
+                'vente' => $venteDetails
             ]);
-        }else{
+        } else {
             return response()->json([
                 'status' => 200,
                 'message' => 'Paiement ajouté avec succès',
             ]);
         }
-
-
     }
 
     public function getFactureDetails($idVente)
