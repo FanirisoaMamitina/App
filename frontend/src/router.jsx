@@ -26,6 +26,7 @@ import AddPaiementById from "./components/Form/Paiement/AddPaiementById.jsx";
 import AddFacture from "./components/Form/Facture/AddFacture.jsx";
 import PaiementList from "./views/PaiementList.jsx";
 import DetailsClient from "./views/DetailsClient.jsx";
+import RapportBenefice from "./views/Rapport.jsx";
 
 const router = createBrowserRouter([
     {
@@ -95,6 +96,10 @@ const router = createBrowserRouter([
             {
                 path:'/paiement',
                 element: <PaiementList />
+            },
+            {
+                path:'/rapport',
+                element: <RapportBenefice />
             },
             {
                 path:'/Add Paiement',

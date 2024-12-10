@@ -34,7 +34,7 @@ class DashboardController extends Controller
             ->groupBy('produit_id')
             ->orderBy('total_vendus', 'DESC')
             ->take(6)
-            ->with('produits') 
+            ->with('produits')
             ->get();
 
         $ventesParCategorie = DB::table('detaille_ventes')
@@ -65,13 +65,56 @@ class DashboardController extends Controller
         $ventes = Ventes::with([
             'clients',
             'detaille_Vente.produits' // Inclure les produits dans les détails de vente
-        ])->where('Status', '=', 'soldée' )
+        ])->where('Status', '=', 'soldée')
             ->orderBy('date', 'desc')
             ->limit(6) // Affiche les 6 ventes les plus récentes
             ->get();
-    
+
         return response()->json(['ventes' => $ventes]);
     }
+
+    public function getBenefices(Request $request)
+    {
+        $type = $request->query('type', 'journalier'); // Par défaut : journalier
+    
+        $query = DB::table('ventes')
+            ->join('detaille_ventes', 'ventes.id', '=', 'detaille_ventes.vente_id')
+            ->join('produits', 'detaille_ventes.produit_id', '=', 'produits.id');
+    
+        if ($type === 'journalier') {
+            $query->select(
+                DB::raw('SUM((detaille_ventes.prix_unitaire - produits.prix_original) * detaille_ventes.quantite) as benefice'),
+                DB::raw('DATE(ventes.date) as date_jour')
+            )
+            ->groupBy(DB::raw('DATE(ventes.date)'))
+            ->orderBy(DB::raw('DATE(ventes.date)'), 'asc');
+        } elseif ($type === 'mensuel') {
+            $query->select(
+                DB::raw('SUM((detaille_ventes.prix_unitaire - produits.prix_original) * detaille_ventes.quantite) as benefice'),
+                DB::raw('MONTH(ventes.date) as mois'),
+                DB::raw('YEAR(ventes.date) as annee')
+            )
+            ->groupBy(DB::raw('YEAR(ventes.date), MONTH(ventes.date)'))
+            ->orderBy(DB::raw('YEAR(ventes.date)'), 'asc')
+            ->orderBy(DB::raw('MONTH(ventes.date)'), 'asc');
+        } elseif ($type === 'annuel') {
+            $query->select(
+                DB::raw('SUM((detaille_ventes.prix_unitaire - produits.prix_original) * detaille_ventes.quantite) as benefice'),
+                DB::raw('YEAR(ventes.date) as annee')
+            )
+            ->groupBy(DB::raw('YEAR(ventes.date)'))
+            ->orderBy(DB::raw('YEAR(ventes.date)'), 'asc');
+        }
+    
+        $result = $query->get();
+    
+        return response()->json([
+            'status' => 200,
+            'type' => $type,
+            'data' => $result
+        ]);
+    }
+    
+    
     
 }
-

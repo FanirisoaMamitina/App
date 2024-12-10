@@ -13,7 +13,7 @@ import { TbCashRegister,TbCashBanknote  } from "react-icons/tb";
 import { ChevronRightIcon } from '@heroicons/react/16/solid';
 import SubMenu from './SubMenu'
 import { useMediaQuery } from 'react-responsive'
-import { IoCashOutline } from 'react-icons/io5'
+import { IoAnalyticsOutline, IoCashOutline } from 'react-icons/io5'
 
 function Sidebar() {
 
@@ -122,6 +122,10 @@ function Sidebar() {
                   <NavLink className={'text-decoration-none text-textG link'} to={"/paiement"} >
                     <TbCashBanknote   size={23} className="min-w-max" />
                     Paiement
+                  </NavLink>
+                  <NavLink className={'text-decoration-none text-textG link'} to={"/rapport"} >
+                    <IoAnalyticsOutline   size={23} className="min-w-max" />
+                    Rapport
                   </NavLink>
                 </div>
               )

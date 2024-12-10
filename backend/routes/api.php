@@ -78,6 +78,8 @@ Route::middleware('auth:sanctum')->group(function () {
     //Dashboard
     Route::get('stats-ventes', [DashboardController::class, 'getStats']);
     Route::get('historique-ventes', [DashboardController::class, 'getHistoriqueVentes']);
+    Route::get('/benefices', [DashboardController::class, 'getBenefices']);
+
 
     Route::post('/notifications/low-stock/{id}', [NotificationController::class, 'notifyLowStock']);
 
