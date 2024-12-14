@@ -68,7 +68,7 @@ class ProduitController extends Controller
 
             return response()->json([
                 'status' => 200,
-                'message' => 'Product Added Successfully',
+                'message' => 'Produit ajouté avec succès.',
             ]);
         }
     }
@@ -162,7 +162,7 @@ class ProduitController extends Controller
         // $result = Produits::where('id', $id)->delete();
 
         $this->enregistrerHistorique('suppression', 'produits', $id, $product->nom_produit." ".$product->nom_produit." ".$product->marque_produit." ".$product->description_produit );
-        return response()->json(['result' => 'Product has been deleted']);
+        return response()->json(['result' => 'Produit supprimé avec succès.']);
     }
 
     protected function enregistrerHistorique($action, $table, $elementId, $details = null)

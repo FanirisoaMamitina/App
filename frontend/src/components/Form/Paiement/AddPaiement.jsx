@@ -69,7 +69,7 @@ function AddPaiement() {
                         },
                     });
                 } else {
-                    navigate('/Vente/List Vente');
+                    navigate('/Vente/Liste Vente');
                 }
             } else if (res.data.status === 400) {
                 setPaiementErrors(res.data.errors);

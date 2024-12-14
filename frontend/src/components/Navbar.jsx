@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import axiosClient from '../axios-client'
 import { useStateContext } from '../contexts/ContextProvider'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import userImage from '../assets/image/user.png'
 import { IoIosExit, IoIosNotifications, IoIosNotificationsOutline, IoMdExit } from 'react-icons/io'
 import Example from './dropDown'
@@ -22,7 +22,7 @@ import { AiFillNotification, AiOutlineNotification } from 'react-icons/ai'
 
 
 function Navbar() {
-
+  const navigate =useNavigate()
   const { pathname } = useLocation()
   const { user, setUser } = useStateContext()
   const [isOpenDrop, setIsOpenDrop] = useState(false)
@@ -43,6 +43,11 @@ function Navbar() {
   //   addEventListener
   // }
 
+  const handlelogout = () => {
+     localStorage.clear();
+     navigate('/login');
+  }
+
   const handle = () => {
     if (isOpenDrop) {
       return setIsOpenDrop(false)
@@ -62,7 +67,7 @@ function Navbar() {
           <div className="col-lg-7 col-md-7 col-6">
             <div className="header-right">
 
-              <div>
+              {/* <div>
                 <Menu>
                   <MenuButton className='relative'>
                     <BiBell size={23} className='text-[#DEE1E2]' />
@@ -128,7 +133,7 @@ function Navbar() {
                     </MenuItem>
                   </MenuItems>
                 </Menu>
-              </div>
+              </div> */}
 
               <div className="profile-box ml-15">
                 <button onClick={handleOpen} className="bg-transparent border-0" type="button">
@@ -152,7 +157,7 @@ function Navbar() {
       </div>
       {isOpenDrop &&
         <ul className="absolute top-17 right-2 bg-dark-second px-8 py-2 rounded-b-md rounded-r-md shadow-md shadow-black text-slate-50">
-          <li><button className='flex items-center space-x-2 hover:text-teal-600' ><span>Logout</span> <IoMdExit /></button></li>
+          <li><button onClick={handlelogout} className='flex items-center space-x-2 hover:text-teal-600' ><span>Logout</span> <IoMdExit /></button></li>
         </ul>
       }
     </header>

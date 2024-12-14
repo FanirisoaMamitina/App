@@ -130,7 +130,10 @@ function Vente() {
         Produit: v.detaille__vente // Accéder correctement aux détails de vente
           .map((detail) => `${detail.produits?.nom_produit || "Non spécifié"} (${detail.quantite} pcs)`)
           .join(" + "),
+        "Status": v.Status,
         "Montant total": v.montant_total.toLocaleString(),
+        "Montant Restant": v.MontantRestant.toLocaleString(),
+        "Montant Payer": v.TotalMontantPaye.toLocaleString(),
       }))
     );
 
@@ -150,7 +153,7 @@ function Vente() {
             <p className='text-textG text-sm'>Vente/Liste</p>
           </div>
           <div>
-            <Link to={'/Vente/Add Vente'} className="flex items-center gap-1 text-decoration-none text-white bg-indigo-600 rounded-md px-3 py-2 btn-sh hover:bg-indigo-700 transition-all duration-500">
+            <Link to={'/Vente/Ajout Vente'} className="flex items-center gap-1 text-decoration-none text-white bg-indigo-600 rounded-md px-3 py-2 btn-sh hover:bg-indigo-700 transition-all duration-500">
               <span>Ajouter</span>
               <IoIosAdd size={20} />
             </Link>

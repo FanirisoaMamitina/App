@@ -58,7 +58,7 @@ function Signup() {
                 <div className='-space-y-px rounded-md shadow-sm' >
                     <div className='my-2'>
                         <label htmlFor="email-address" className="sr-only">
-                            Email address
+                        Nom
                         </label>
                         <input
                             ref={nameRef}
@@ -67,7 +67,7 @@ function Signup() {
                             autoComplete='fullname'
                             type="text"
                             className="relative block w-full shadow-sm shadow-black appearance-none rounded-none rounded-t-lg px-3 py-2 text-white bg-dark-second placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                            placeholder='Full Name'
+                            placeholder='Nom'
                         />
                         {errors && errors.name && (
                             <p className="text-red-500 text-sm mt-1">{errors.name[0]}</p>
@@ -75,7 +75,7 @@ function Signup() {
                     </div>
                     <div className='my-2'>
                         <label htmlFor="email-address" className="sr-only">
-                            Email address
+                        Adresse Email 
                         </label>
                         <input
                             ref={emailRef}
@@ -84,7 +84,7 @@ function Signup() {
                             autoComplete='email'
                             type="email"
                             className="relative block w-full shadow-sm shadow-black appearance-none px-3 py-2 text-white bg-dark-second placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                            placeholder='Email address'
+                            placeholder='Adresse Email'
                         />
                         {errors && errors.email && (
                             <p className="text-red-500 text-sm mt-1">{errors.email[0]}</p>
@@ -92,7 +92,7 @@ function Signup() {
                     </div>
                     <div className='my-2'>
                         <label htmlFor="password" className="sr-only">
-                            Password
+                            Mot de passe
                         </label>
                         <input
                             ref={passwordRef}
@@ -101,7 +101,7 @@ function Signup() {
                             type="password"
                             autoComplete="current-password"
                             className="relative block w-full shadow-sm shadow-black appearance-none px-3 py-2 text-white bg-dark-second placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                            placeholder='Password'
+                            placeholder='Mot de passe'
                         />
                         {errors && errors.password && (
                             <p className="text-red-500 text-sm mt-1">{errors.password[0]}</p>
@@ -109,7 +109,7 @@ function Signup() {
                     </div>
                     <div className='my-2'>
                         <label htmlFor="password_confirmation" className="sr-only">
-                            Password Confirmation
+                            Confirmation
                         </label>
                         <input
                             ref={passwordConfirmationRef}
@@ -118,7 +118,7 @@ function Signup() {
                             type="password"
                             autoComplete="current-password"
                             className="relative block w-full shadow-sm shadow-black appearance-none rounded-none rounded-b-lg px-3 py-2 text-white bg-dark-second placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                            placeholder='Password Confirmation'
+                            placeholder='Confirmation '
                         />
                     </div>
                 </div>
@@ -128,13 +128,13 @@ function Signup() {
                         type="submit"
                         className="group relative flex w-full justify-center rounded-md bg-red-700 py-2 px-4 text-sm font-medium text-white hover:bg-red-800 focus:outline-none "
                     >
-                        {load=='on' ? <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> : <span>Signup</span>}
+                        {load=='on' ? <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> : <span>Connecter</span>}
                     </button>
                 </div>
 
                 <p className="mt-2 text-end text-sm text-gray-600">
                     <Link to="/login" className="font-medium text-decoration-none text-indigo-600 hover:text-indigo-500">
-                        Already Registered
+                        Déja un compte
                     </Link>
                 </p>
             </form>

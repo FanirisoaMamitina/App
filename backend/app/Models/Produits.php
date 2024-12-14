@@ -9,8 +9,8 @@ class Produits extends Model
 {
     use HasFactory;
     protected $table = 'produits';
-    public $incrementing = false; // Désactive l'auto-incrémentation pour l'ID
-    protected $keyType = 'string'; // Type de clé primaire
+    public $incrementing = false; 
+    protected $keyType = 'string'; 
     protected $fillable = [
         'id',
         'categorie_id',
@@ -27,7 +27,6 @@ class Produits extends Model
         parent::boot();
 
         static::creating(function ($produit) {
-            // Génération de l'ID personnalisé : PD[date: YYMMDD]-[séquence]
             $latestProduit = self::latest('created_at')->first();
             $nextId = $latestProduit ? intval(substr($latestProduit->id, 7)) + 1 : 1;
             $produit->id = 'PD' . now()->format('ym') . '-' . str_pad($nextId, 6, '0', STR_PAD_LEFT);

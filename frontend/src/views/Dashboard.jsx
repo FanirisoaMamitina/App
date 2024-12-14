@@ -325,7 +325,7 @@ function Dashboard() {
               </tbody>
             </table>
             <div className="flex items-center justify-end mt-4">
-              <Link to="/Vente/List Vente" className="bg-indigo-600 px-4 py-2 text-white rounded-md text-decoration-none hover:bg-indigo-800">
+              <Link to="/Vente/Liste Vente" className="bg-indigo-600 px-4 py-2 text-white rounded-md text-decoration-none hover:bg-indigo-800">
                 Voir plus
               </Link>
             </div>

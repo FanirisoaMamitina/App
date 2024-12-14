@@ -114,6 +114,20 @@ class PaiementController extends Controller
         ]);
     }
 
+    public function updateDescription(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'description' => 'required|string|max:255',
+        ]);
+
+        $facture = Facture::findOrFail($id);
+        $facture->description = $validated['description'];
+        $facture->save();
+
+        return response()->json(['message' => 'Description mise à jour avec succès.']);
+    }
+
+
 
     // public function storeFacture(Request $request)
     // {

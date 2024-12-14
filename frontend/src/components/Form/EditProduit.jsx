@@ -94,7 +94,7 @@ function EditProduit() {
           icon: "success",
           title: res.data.message
         });
-        navigate('/Produits/List Produits');
+        navigate('/Produits/Liste Produits');
       } else if (res.data.status === 422) {
         setErrorList(res.data.errors)
       } else if (res.data.status === 404) {

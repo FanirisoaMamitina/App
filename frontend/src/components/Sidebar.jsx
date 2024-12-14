@@ -72,17 +72,17 @@ function Sidebar() {
     {
       name: "Produits",
       icon: BiPackage,
-      menus: ["List Produits", "Add Produits", "Details Produits", "Categories", "Add Categories"]
+      menus: ["Liste Produits", "Ajout Produits", "Categories", "Ajout Categories"]
     },
     {
       name: "Clients",
       icon: BsPerson,
-      menus: ["List Clients", "Add Clients", "Details"]
+      menus: ["Liste Clients", "Ajout Clients"]
     },
     {
       name: "Vente",
       icon: FiShoppingCart,
-      menus: ["List Vente", "Add Vente", "Details"]
+      menus: ["Liste Vente", "Ajout Vente"]
     },
   ]
 
@@ -104,7 +104,7 @@ function Sidebar() {
             <li>
               <NavLink className={'text-decoration-none text-textG link'} to={"/dashboard"} >
                 <AiOutlineAppstore size={23} className="min-w-max" />
-                Dashboard
+                Tableau de bord
               </NavLink>
             </li>
 
@@ -131,12 +131,12 @@ function Sidebar() {
               )
             }
 
-            <li>
+            {/* <li>
               <NavLink className={'text-decoration-none text-textG link'} to={"/notifications"} >
                 <BiBell size={23} className="min-w-max" />
                 Notifications
               </NavLink>
-            </li>
+            </li> */}
 
             <li>
               <NavLink className={'text-decoration-none text-textG link'} to={"/historique"} >
@@ -144,12 +144,12 @@ function Sidebar() {
                 Historique
               </NavLink>
             </li>
-            <li>
+            {/* <li>
               <NavLink className={'text-decoration-none text-textG link'} to={"/parametres"} >
                 <RiSettings4Line size={23} className="min-w-max" />
                 Parametres
               </NavLink>
-            </li>
+            </li> */}
           </ul>
 
           {

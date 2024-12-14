@@ -8,7 +8,7 @@ import { BiDownload, BiPencil, BiSearch, BiTrash } from 'react-icons/bi'
 import axiosClient from '../axios-client';
 import swal from 'sweetalert2';
 import { IoEyeOutline } from 'react-icons/io5';
-
+import * as XLSX from 'xlsx';
 
 function Clients() {
 
@@ -43,10 +43,10 @@ function Clients() {
 
   }
 
-  const deleteClient = (e, id) => {
+  const deleteClient = (e, id , name) => {
     swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
+      title: "Etez vous sur?",
+      text: `Êtes-vous sûr de vouloir supprimer ${name} ? Cette action est irréversible.`,
       icon: "warning",
       background: '#333',
       color: 'white',
@@ -54,7 +54,8 @@ function Clients() {
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!"
+      cancelButtonText: "Non",
+      confirmButtonText: "Oui, supprimer"
     }).then((result) => {
       if (result.isConfirmed) {
         axiosClient.delete(`delete-client/${id}`).then(res => {
@@ -84,6 +85,19 @@ function Clients() {
 
   }
 
+  const exportToExcel = () => {
+    const data = clientsList.map(cli => ({
+      ID: cli.id,
+      Nom: cli.nom,
+      Tel: cli.tel,
+    }));
+    const ws = XLSX.utils.json_to_sheet(data);
+
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Client");
+    XLSX.writeFile(wb, "client.xlsx");
+  };
+
   return (
     <div className='mt-[12px]'>
       <div className="car animated fadeInDown">
@@ -93,7 +107,7 @@ function Clients() {
             <p className='text-textG text-sm' >Clients/Liste</p>
           </div>
           <div>
-            <Link to={'/Clients/Add Clients'} className="flex items-center gap-1 text-decoration-none text-white bg-indigo-600 rounded-md px-3 py-2 btn-sh hover:bg-indigo-700 transition-all duration-500">
+            <Link to={'/Clients/Ajout Clients'} className="flex items-center gap-1 text-decoration-none text-white bg-indigo-600 rounded-md px-3 py-2 btn-sh hover:bg-indigo-700 transition-all duration-500">
               <span>Ajouter</span>
               <IoIosAdd size={20} />
             </Link>
@@ -107,7 +121,7 @@ function Clients() {
               <BiSearch className='text-white text-xl absolute top-[31px] left-10 z-20' />
             </div>
 
-            <button type="button" class="btn btn-success"><PiMicrosoftExcelLogoFill /></button>
+            <button type="button" onClick={exportToExcel} class="btn btn-success"><PiMicrosoftExcelLogoFill /></button>
 
           </div>
 
@@ -141,7 +155,7 @@ function Clients() {
                       &nbsp; &nbsp;
                       <Link to={`/Clients/Edit Client/${cli.id}`} className="text-yellow-500 text-xl p-1 rounded-md hover:text-yellow-800 shadow-md shadow-yellow-900 duration-500"><FiEdit /></Link>
                       &nbsp; &nbsp;
-                      <button type='button' onClick={(e) => deleteClient(e, cli.id)} className="text-red-500 p-1 rounded-md text-xl shadow-md shadow-red-900 hover:text-red-800 duration-500" ><BiTrash /></button>
+                      <button type='button' onClick={(e) => deleteClient(e, cli.id ,cli.nom)} className="text-red-500 p-1 rounded-md text-xl shadow-md shadow-red-900 hover:text-red-800 duration-500" ><BiTrash /></button>
                     </td>
                   </tr>
                 ))}

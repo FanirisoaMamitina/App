@@ -74,6 +74,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('store-paiement', [PaiementController::class, 'store']);
     Route::get('facture-details/{id}', [PaiementController::class, 'getFactureDetails']);
     Route::post('store-facture',[PaiementController::class, 'storeFacture']);
+    Route::put('/factures/{id}/update-description', [PaiementController::class, 'updateDescription']);
+
 
     //Dashboard
     Route::get('stats-ventes', [DashboardController::class, 'getStats']);

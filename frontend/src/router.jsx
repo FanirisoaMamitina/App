@@ -42,11 +42,11 @@ const router = createBrowserRouter([
                 element: <Dashboard />
             },
             {
-                path:'/Produits/List Produits',
+                path:'/Produits/Liste Produits',
                 element: <Produits />,
             },
             {
-                path:'/Produits/Add Produits',
+                path:'/Produits/Ajout Produits',
                 element: <AddProduits />
             },
             {
@@ -58,7 +58,7 @@ const router = createBrowserRouter([
                 element: <Categories />
             },
             {
-                path:'/Produits/Add Categories',
+                path:'/Produits/Ajout Categories',
                 element: <AddCategories/>
             },
             {
@@ -66,11 +66,11 @@ const router = createBrowserRouter([
                 element: <EditCategories />
             },
             {
-                path:'/Clients/List Clients',
+                path:'/Clients/Liste Clients',
                 element: <Clients />
             },
             {
-                path:'/Clients/Add Clients',
+                path:'/Clients/Ajout Clients',
                 element: <AddClients />
             },
             {
@@ -82,7 +82,7 @@ const router = createBrowserRouter([
                 element: <DetailsClient />
             },
             {
-                path:'/Vente/List Vente',
+                path:'/Vente/Liste Vente',
                 element: <Vente />
             },
             {
@@ -90,7 +90,7 @@ const router = createBrowserRouter([
                 element: <DetailVente />
             },
             {
-                path:'/Vente/Add Vente',
+                path:'/Vente/Ajout Vente',
                 element: <AddVente />
             },
             {

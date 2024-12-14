@@ -93,7 +93,7 @@ function AddPaiementById() {
                             },
                         });
                     } else {
-                        navigate('/Vente/List Vente');
+                        navigate('/Vente/Liste Vente');
                     }
                 } else if (res.data.status === 400) {
                     setPaiementErrors(res.data.errors);
@@ -112,7 +112,11 @@ function AddPaiementById() {
     };
 
     if (!details) {
-        return <div>Chargement des données...</div>;
+        return (
+            <div className="flex items-center justify-center h-screen text-white bg-dark-primary">
+                <span className="spinner-border spinner-border-lg" role="status" aria-hidden="true"></span>
+            </div>
+        );
     }
 
     return (

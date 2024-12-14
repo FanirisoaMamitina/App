@@ -80,7 +80,7 @@ class ClientController extends Controller
             $this->enregistrerHistorique('ajout', 'clients', $client->id,$client->nom." ".$client->tel);
             return response()->json([
                 'status'=>200,
-                'message'=>'Client Ajouter Success',
+                'message'=>'Client ajouté avec succès',
             ]);
         }
     }
@@ -128,7 +128,7 @@ class ClientController extends Controller
                 $this->enregistrerHistorique('modification', 'clients', $id, $client->nom." ".$client->tel);
                 return response()->json([
                     'status'=>200,
-                    'message'=>'Client Edited Successfully',
+                    'message'=>'Client mis à jour avec succès',
                 ]);
             }
             else 
@@ -144,11 +144,12 @@ class ClientController extends Controller
 
     public function destroy($id)
     {
-        $result = Clients::where('id',$id)->delete();
+        $result = Clients::findOrFail($id);
+        $result->delete();
         if($result)
         {
              $this->enregistrerHistorique('suppression', 'clients', $id,  $result->id,$result->nom." ".$result->tel);
-            return response()->json(['result'=>'Client has been deleted']);
+            return response()->json(['result'=>'Client supprimé avec succès']);
         }
     }
 

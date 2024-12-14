@@ -8,7 +8,7 @@ import { PiMicrosoftExcelLogoFill } from "react-icons/pi";
 import { useEffect } from 'react'
 import axiosClient from '../axios-client'
 import swal from 'sweetalert2';
-
+import * as XLSX from 'xlsx';
 
 function Categories() {
 
@@ -31,10 +31,10 @@ function Categories() {
 
   }
 
-  const deleteCategory = (e, id) => {
+  const deleteCategory = (e, id ,name) => {
     swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
+      title: "Etez vous sur?",
+      text: `Êtes-vous sûr de vouloir supprimer ${name} ? Cette action est irréversible.`,
       icon: "warning",
       background: '#333',
       color: 'white',
@@ -42,7 +42,8 @@ function Categories() {
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!"
+      cancelButtonText: "Non",
+      confirmButtonText: "Oui, supprimer"
     }).then((result) => {
       if (result.isConfirmed) {
         axiosClient.delete(`delete-category/${id}`).then(res => {
@@ -55,16 +56,16 @@ function Categories() {
             timer: 3000,
             timerProgressBar: true,
             didOpen: (toast) => {
-                toast.onmouseenter = swal.stopTimer;
-                toast.onmouseleave = swal.resumeTimer;
+              toast.onmouseenter = swal.stopTimer;
+              toast.onmouseleave = swal.resumeTimer;
             }
-        });
-        Toast.fire({
+          });
+          Toast.fire({
             icon: "success",
             title: res.data.result
-        });
+          });
         })
-      getCategorie();
+        getCategorie();
 
       }
     });
@@ -73,10 +74,23 @@ function Categories() {
   }
 
   const statusSelect = [
-    {name: "Tous", key: "2"},
-    {name: "Active", key: "1"},
-    {name: "Desactive", key: "0"},
+    { name: "Tous", key: "2" },
+    { name: "Active", key: "1" },
+    { name: "Desactive", key: "0" },
   ]
+
+  const exportToExcel = () => {
+    const data = categorieList.map(c => ({
+      ID: c.id,
+      Nom: c.nom_categorie,
+      Status: c.status_categorie ? "Active" : "Desactive",
+    }));
+    const ws = XLSX.utils.json_to_sheet(data);
+
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Categorie");
+    XLSX.writeFile(wb, "categorie.xlsx");
+  };
 
   return (
     <div className='mt-[12px]'>
@@ -87,7 +101,7 @@ function Categories() {
             <p className='text-textG text-sm' >Produits/Categories</p>
           </div>
           <div>
-            <Link to={'/Produits/Add Categories'} className="flex items-center gap-1 text-decoration-none text-white bg-indigo-600 rounded-md px-3 py-2 btn-sh hover:bg-indigo-700 transition-all duration-500">
+            <Link to={'/Produits/Ajout Categories'} className="flex items-center gap-1 text-decoration-none text-white bg-indigo-600 rounded-md px-3 py-2 btn-sh hover:bg-indigo-700 transition-all duration-500">
               <span>Ajouter</span>
               <IoIosAdd size={20} />
             </Link>
@@ -107,7 +121,7 @@ function Categories() {
               </select>
             </div>
 
-            <button type="button" className="btn btn-success"><PiMicrosoftExcelLogoFill /></button>
+            <button type="button" onClick={exportToExcel} className="btn btn-success"><PiMicrosoftExcelLogoFill /></button>
 
           </div>
 
@@ -139,7 +153,7 @@ function Categories() {
                     <td className='flex items-center gap-2'>
                       <Link to={`/Produits/Edit Categories/${c.id}`} className="text-yellow-500 text-xl p-1 rounded-md hover:text-yellow-800 shadow-md shadow-yellow-900 duration-500" ><FiEdit /></Link>
                       &nbsp; &nbsp;
-                      <button type='button' onClick={(e) => deleteCategory(e, c.id)} className="text-red-500 p-1 rounded-md text-xl shadow-md shadow-red-900 hover:text-red-800 duration-500" ><BiTrash /></button>
+                      <button type='button' onClick={(e) => deleteCategory(e, c.id, c.nom_categorie)} className="text-red-500 p-1 rounded-md text-xl shadow-md shadow-red-900 hover:text-red-800 duration-500" ><BiTrash /></button>
                     </td>
                   </tr>
                 ))}

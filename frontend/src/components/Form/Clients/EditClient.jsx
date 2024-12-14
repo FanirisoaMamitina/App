@@ -26,7 +26,7 @@ function EditClient() {
                     title: "Oops...",
                     text: res.data.message
                 });
-                navigate('/Clients/List Clients');
+                navigate('/Clients/Liste Clients');
             }
             setLoad('off');
         });
@@ -67,7 +67,7 @@ function EditClient() {
                     icon: "success",
                     title: res.data.message
                 });
-                navigate('/Clients/List Clients');
+                navigate('/Clients/Liste Clients');
                 setErrors([]);
             } else if (res.data.status === 422) {
                 setErrors(res.data.errors)
@@ -78,7 +78,7 @@ function EditClient() {
                     background: '#333',
                     text: res.data.message
                 });
-                navigate('/Clients/List Clients');
+                navigate('/Clients/Liste Clients');
             }
             setLoader(false);
         });

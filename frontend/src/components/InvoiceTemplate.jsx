@@ -1,30 +1,26 @@
-import React,{useEffect, useState} from "react";
-import logo from "../assets/image/logo.png";
+import React, { useEffect, useState } from "react";
+import logo from "../assets/image/logo.jpg";
 import n2words from "n2words";
 
 const InvoiceTemplate = ({ invoiceData }) => {
-  const { companyInfo, customerInfo, invoiceDetails, items, total ,reste,paiements } = invoiceData;
+  const { companyInfo, customerInfo, invoiceDetails, items, total, reste, paiements, description } = invoiceData;
 
 
   const formattedTotal = parseFloat(total) || 0;
   const formattedReste = parseFloat(reste) || 0;
   let payer = (total - reste) || 0
-  const formatPayer = parseFloat(payer) 
+  const formatPayer = parseFloat(payer)
   const [words, setWords] = useState("");
   useEffect(() => {
     const result = n2words(formattedTotal, { lang: "fr" });
     setWords(result)
-  },[total])
+  }, [total])
 
   return (
     <div className="max-w-4xl mx-auto p-8 bg-white shadow-lg">
       <header className="flex justify-between items-center mb-8">
         <div className="flex items-center">
-          <img src={logo} alt="Logo de la société" className="h-12 mr-4" />
-          <div>
-            <h1 className="text-2xl font-bold">Computer</h1>
-            <span className="text-red-500 text-2xl font-semibold">Store</span>
-          </div>
+          <img src={logo} alt="Logo de la société" className="h-28 mr-4" />
         </div>
         <div className="text-right">
           <h2 className="text-2xl font-semibold">Facture {invoiceDetails.number}</h2>
@@ -58,9 +54,13 @@ const InvoiceTemplate = ({ invoiceData }) => {
       </section>
 
       <section className="mb-2  px-2 pb-2">
-        <div className="flex items-center space-x-2">
-
-        </div>
+        {description &&
+          <div className="px-4 py-2 border-1 border-gray-600 w-full h-[180px]">
+            <p>
+              <span>{description}</span>
+            </p>
+          </div>
+        }
 
       </section>
 
@@ -104,7 +104,7 @@ const InvoiceTemplate = ({ invoiceData }) => {
             <h3 className="text-[16px] flex items-center justify-between"><span>Total HT: </span> <span>{formattedTotal.toFixed(2)} Ar</span></h3>
             <h3 className="text-[16px] flex items-center justify-between"><span>Total TTC: </span> <span>{formattedTotal.toFixed(2)} Ar</span></h3>
             <h3 className="text-[16px] flex items-center justify-between"><span>Payé: </span> <span>{formatPayer.toFixed(2)} Ar</span></h3>
-            <h3 className="text-[16px] flex items-center justify-between"><span>Reste à payer:</span> <span> {"  "+formattedReste.toFixed(2)} Ar</span></h3>
+            <h3 className="text-[16px] flex items-center justify-between"><span>Reste à payer:</span> <span> {"  " + formattedReste.toFixed(2)} Ar</span></h3>
           </div>
         </div>
 

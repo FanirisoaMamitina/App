@@ -48,7 +48,7 @@ class CategoryController extends Controller
             $category->save();
             return response()->json([
                 'status'=>200,
-                'message'=>'Category Added Successfully',
+                'message'=>'Categorie ajouté avec succès',
             ]);
         }
     }
@@ -94,7 +94,7 @@ class CategoryController extends Controller
                 $category->save();
                 return response()->json([
                     'status'=>200,
-                    'message'=>'Category Edited Successfully',
+                    'message'=>'Categorie mis à jour avec succès',
                 ]);
             }
             else 
@@ -113,7 +113,7 @@ class CategoryController extends Controller
         $result = Category::where('id',$id)->delete();
         if($result)
         {
-            return response()->json(['result'=>'Category has been deleted']);
+            return response()->json(['result'=>'Categorie supprimé avec succès']);
         }
     }
 

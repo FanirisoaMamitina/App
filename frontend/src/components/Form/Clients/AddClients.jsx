@@ -52,7 +52,7 @@ function AddClients() {
                     icon: "success",
                     title: res.data.message
                 });
-                navigate('/Clients/List Clients')
+                navigate('/Clients/Liste Clients')
             } else (res.data.status === 400)
             {
                 setClients({ ...clientInput, error_list: res.data.errors })

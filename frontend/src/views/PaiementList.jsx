@@ -5,6 +5,7 @@ import { Link, NavLink, useLocation } from 'react-router-dom'
 import { FiEdit } from "react-icons/fi";
 import { PiMicrosoftExcelLogoFill } from "react-icons/pi";
 import { BiDownload, BiPencil, BiSearch, BiTrash } from 'react-icons/bi'
+import * as XLSX from 'xlsx';
 
 function PaiementList() {
 
@@ -14,7 +15,7 @@ function PaiementList() {
     const [filterValue, setFilterValue] = useState('');
 
     useEffect(() => {
-        getClients()
+        getPaiement()
     },[])
 
     const handleFilter = (e) => {
@@ -27,7 +28,7 @@ function PaiementList() {
         setFilterValue(e.target.value);
       }
 
-    const getClients = () => {
+    const getPaiement = () => {
         setLoading(true)
         axiosClient.get('/getPaiement').then(res => {
             if (res.status === 200) {
@@ -37,6 +38,28 @@ function PaiementList() {
             setLoading(false);
         });
     }
+
+    const exportToExcel = () => {
+        // Préparer les données en format JSON pour XLSX
+        const data = paiement.map(pay => ({
+          ID: pay.id,
+          Nom: pay.vente.clients.nom,
+          Tel: pay.vente.clients.tel,
+          Date: pay.DatePaiement,
+          Montant: pay.MontantPaye,
+          Mode: pay.ModePaiement,
+          Ref: pay.Ref ? pay.Ref : "N/A",
+        }));
+        // Créer une nouvelle feuille Excel avec les données
+        const ws = XLSX.utils.json_to_sheet(data);
+    
+        // Créer un nouveau classeur et y ajouter la feuille
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Paiement");
+    
+        // Exporter le fichier Excel sous le nom "produits.xlsx"
+        XLSX.writeFile(wb, "paiement.xlsx");
+      };
     return (
         <div className='mt-[12px]'>
             <div className="car animated fadeInDown">
@@ -44,12 +67,6 @@ function PaiementList() {
                     <div>
                         <h3 className="text-gray-400 font-medium" >Paiement</h3>
                         <p className='text-textG text-sm' >Paiement/Liste</p>
-                    </div>
-                    <div>
-                        <Link to={'/Clients/Add Clients'} className="flex items-center gap-1 text-decoration-none text-white bg-indigo-600 rounded-md px-3 py-2 btn-sh hover:bg-indigo-700 transition-all duration-500">
-                            <span>Ajouter</span>
-                            <IoIosAdd size={20} />
-                        </Link>
                     </div>
                 </div>
 
@@ -60,7 +77,7 @@ function PaiementList() {
                             <BiSearch className='text-white text-xl absolute top-[31px] left-10 z-20' />
                         </div>
 
-                        <button type="button" class="btn btn-success"><PiMicrosoftExcelLogoFill /></button>
+                        <button type="button" onClick={exportToExcel} class="btn btn-success"><PiMicrosoftExcelLogoFill /></button>
 
                     </div>
 

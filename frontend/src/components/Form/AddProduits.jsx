@@ -83,7 +83,7 @@ function AddProduits() {
           icon: "success",
           title: res.data.message
         });
-        navigate('/Produits/List Produits')
+        navigate('/Produits/Liste Produits')
       } else if (res.data.status === 422) {
         setProduit({ ...produitInput, error_list: res.data.errors })
       }

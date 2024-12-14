@@ -7,11 +7,50 @@ import swal from "sweetalert2";
 import { FiDownload } from "react-icons/fi";
 import { RiMailSendLine } from "react-icons/ri";
 import Spinner from 'react-bootstrap/Spinner';
+import { MdEditNote } from "react-icons/md";
+import { PencilIcon } from "@heroicons/react/16/solid";
 
 const Facture = () => {
   const location = useLocation();
-  const { venteId, factureId, client, totalAmount, vente ,date} = location.state || {};
+  const { venteId, factureId, client, totalAmount, vente, date } = location.state || {};
 
+  const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
+  const [newDescription, setNewDescription] = useState("");
+  const [description, setDescription] = useState(null);
+
+  const handleOpenNoteModal = () => {
+    setNewDescription(description);
+    setIsNoteModalOpen(true);
+  };
+
+  const handleCloseNoteModal = () => {
+    setIsNoteModalOpen(false);
+  };
+
+  const handleSaveNote = async () => {
+    try {
+      const response = await axiosClient.put(`/factures/${factureId}/update-description`, {
+        description: newDescription,
+      });
+
+      if (response.status === 200) {
+        setDescription(newDescription);
+        swal.fire({
+          icon: "success",
+          title: "Description mise à jour",
+          text: "La description a été modifiée avec succès.",
+        });
+        setIsNoteModalOpen(false);
+      }
+    } catch (error) {
+      console.error(error);
+      swal.fire({
+        icon: "error",
+        title: "Erreur",
+        text: "Une erreur est survenue lors de la mise à jour.",
+      });
+    }
+  };
 
   const [idFacture, setIdFacture] = useState('');
   const [infoCli, setInfoCli] = useState({});
@@ -29,7 +68,7 @@ const Facture = () => {
       email: "computerstore.net1@gmail.com",
     },
     customerInfo: {
-     id: vente.clients.id ? vente.clients.id : "inconnu",
+      id: vente.clients.id ? vente.clients.id : "inconnu",
       name: client.nom,
       tel: client.tel,
     },
@@ -47,6 +86,7 @@ const Facture = () => {
     total: totalAmount ? totalAmount : 0,
     reste: vente.MontantRestant ? vente.MontantRestant : 0,
     payer: totalAmount - vente.MontantRestant,
+    description: description ? description : null,
   };
 
   const invoiceRef = useRef();
@@ -154,6 +194,30 @@ const Facture = () => {
 
   return (
     <>
+      {isNoteModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-50">
+          <div className="bg-white p-6 rounded shadow-lg w-96">
+            <h2 className="text-xl font-semibold mb-4">Modifier la description</h2>
+            <textarea
+              value={newDescription}
+              onChange={(e) => setNewDescription(e.target.value)}
+              rows={4}
+              className="w-full border rounded p-2"
+            />
+            <div className="flex justify-end space-x-2 mt-4">
+              <button
+                onClick={handleCloseNoteModal}
+                className="btn btn-secondary"
+              >
+                Annuler
+              </button>
+              <button onClick={handleSaveNote} className="btn btn-primary">
+                Sauvegarder
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       {load == 'on' ? (
         <div className="bg-gray-500 h-screen flex items-center justify-center">
           <Spinner animation="grow" variant="light" />
@@ -163,6 +227,10 @@ const Facture = () => {
           <div className=" bg-slate-100 shadow p-4 sticky top-0 z-10 animated fadeInDown flex items-center justify-between mb-2">
             <h1 className="text-3xl mb-6">Facture</h1>
             <div className="flex items-center space-x-2">
+              <button onClick={handleOpenNoteModal} type="button" className="btn btn-warning btn-lg btn-block d-flex align-items-center gap-2">
+                <MdEditNote />
+                <span>Note</span>
+              </button>
               <button onClick={sendEmail} type="button" className="btn btn-success btn-lg btn-block d-flex align-items-center gap-2">
                 <RiMailSendLine />
                 <span>Envoyer en Mail</span>
@@ -178,7 +246,6 @@ const Facture = () => {
           <div ref={invoiceRef} className="animated fadeInDown">
             <InvoiceTemplate invoiceData={invoiceData} />
           </div>
-
         </div>
       )
       }

@@ -44,10 +44,10 @@ function Produits() {
 
   }
 
-  const deleteProduct = (e, id) => {
+  const deleteProduct = (e, id , name) => {
     swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
+      title: "Etez vous sur?",
+      text: `Êtes-vous sûr de vouloir supprimer ${name} ? Cette action est irréversible.`,
       icon: "warning",
       background: '#333',
       color: 'white',
@@ -55,7 +55,8 @@ function Produits() {
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!"
+      cancelButtonText: "Non",
+      confirmButtonText: "Oui, supprimer"
     }).then((result) => {
       if (result.isConfirmed) {
         axiosClient.delete(`delete-produit/${id}`).then(res => {
@@ -116,7 +117,7 @@ function Produits() {
             <p className='text-textG text-sm' >Produits/Liste</p>
           </div>
           <div>
-            <Link to={'/Produits/Add Produits'} className="flex items-center gap-1 text-decoration-none text-white bg-indigo-600 rounded-md px-3 py-2 btn-sh hover:bg-indigo-700 transition-all duration-500">
+            <Link to={'/Produits/Ajout Produits'} className="flex items-center gap-1 text-decoration-none text-white bg-indigo-600 rounded-md px-3 py-2 btn-sh hover:bg-indigo-700 transition-all duration-500">
               <span>Ajouter</span>
               <IoIosAdd size={20} />
             </Link>
@@ -128,21 +129,6 @@ function Produits() {
             <div className='w-64' >
               <input type="search" value={filterValue} onInput={(e) => handleFilter(e)} className='relative block w-full shadow-sm shadow-black appearance-none rounded-lg pl-14 py-[10px] text-white placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm bg-dark-primary border-3 border-teal-950 mt-[18px]' placeholder='Recherche...' />
               <BiSearch className='text-white text-xl absolute top-[31px] z-20 left-10' />
-            </div>
-            <div className='w-44 flex items-center gap-3'>
-              <label for="inputState" className='text-textG'>State</label>
-              <select id="inputState" className="form-control">
-                <option selecte>Choose...</option>
-                <option>...</option>
-              </select>
-            </div>
-
-            <div className='w-44 flex items-center gap-3'>
-              <label for="inputState" className='text-textG'>State</label>
-              <select id="inputState" className="form-control">
-                <option selected>Choose...</option>
-                <option>...</option>
-              </select>
             </div>
 
             <button type="button" onClick={exportToExcel} class="btn btn-success"><PiMicrosoftExcelLogoFill /></button>
@@ -194,7 +180,7 @@ function Produits() {
                       <td>{p.stock}</td>
                       <td className='flex items-center gap-2 py-4'>
                         <Link to={`/Produits/Edit Produit/${p.id}`} className="text-yellow-500 text-xl p-1 rounded-md hover:text-yellow-800 shadow-md shadow-yellow-900 duration-500"><FiEdit /></Link>
-                        <button type='button' onClick={(e) => deleteProduct(e, p.id)} className="text-red-500 p-1 rounded-md text-xl shadow-md shadow-red-900 hover:text-red-800 duration-500"><BiTrash /></button>
+                        <button type='button' onClick={(e) => deleteProduct(e, p.id , p.category.nom_categorie+" "+p.nom_produit)} className="text-red-500 p-1 rounded-md text-xl shadow-md shadow-red-900 hover:text-red-800 duration-500"><BiTrash /></button>
                       </td>
                     </tr>
                   ))
