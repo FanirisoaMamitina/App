@@ -97,14 +97,11 @@ function Produits() {
       Stock: p.stock,
     }));
 
-    // Créer une nouvelle feuille Excel avec les données
     const ws = XLSX.utils.json_to_sheet(data);
 
-    // Créer un nouveau classeur et y ajouter la feuille
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Produits");
 
-    // Exporter le fichier Excel sous le nom "produits.xlsx"
     XLSX.writeFile(wb, "produits.xlsx");
   };
 

@@ -55,8 +55,19 @@ class PaiementController extends Controller
         $vente = Ventes::find($paiement['idVente']);
         $vente->TotalMontantPaye += $paiement['MontantPaye'];
         $vente->MontantRestant = $vente->montant_total - $vente->TotalMontantPaye;
-        if ($vente->MontantRestant == 0) {
-            $vente->Status = "soldée";
+        if($vente->type_vente === "direct") {
+            if($vente->MontantRestant == 0) {
+                $vente->statut_paiement = "payé";
+                $vente->statut_reception = "reçu";
+            }else {
+                $vente->statut_paiement = "partiellement payé";
+            }
+        }else if($vente->type_vente === "commande"){
+            if($vente->MontantRestant == 0) {
+                $vente->statut_paiement = "payé";
+            }else {
+                $vente->statut_paiement = "partiellement payé";
+            }
         }
         $vente->save();
 

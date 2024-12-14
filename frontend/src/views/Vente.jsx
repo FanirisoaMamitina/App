@@ -5,25 +5,36 @@ import { Link, useLocation } from 'react-router-dom';
 import { FiEdit } from "react-icons/fi";
 import { PiMicrosoftExcelLogoFill } from "react-icons/pi";
 import { BiDownload, BiPencil, BiSearch, BiTrash } from 'react-icons/bi';
-import { IoEyeSharp, IoPrintOutline } from "react-icons/io5";
+import { IoMdCash } from 'react-icons/io';
+import { IoCash, IoCashSharp, IoEyeSharp, IoPrintOutline } from "react-icons/io5";
 import axiosClient from '../axios-client';
 import swal from 'sweetalert2';
 import * as XLSX from 'xlsx';  // Importer la bibliothèque xlsx
 import Action from '../components/dropDown';
+import {
+  ArchiveBoxXMarkIcon,
+  ChevronDownIcon,
+  PencilIcon,
+  Square2StackIcon,
+  TrashIcon,
+} from '@heroicons/react/16/solid'
+import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 
 function Vente() {
   const { pathname } = useLocation();
   const [loading, setLoading] = useState(false);
   const [venteList, setVente] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(5); 
-  const [searchQuery, setSearchQuery] = useState(''); 
-  const [startDate, setStartDate] = useState(''); 
-  const [endDate, setEndDate] = useState(''); 
+  const [itemsPerPage, setItemsPerPage] = useState(5);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
 
   useEffect(() => {
     getVentes();
   }, []);
+
+
 
   const getVentes = () => {
     setLoading(true);
@@ -35,6 +46,34 @@ function Vente() {
     });
   };
 
+  const handleRefresh = () => {
+    getVentes(); // Rafraîchit la liste
+  };
+
+  const handleReception = (id) => {
+    axiosClient.put(`/update-reception/${id}`).then((res) => {
+      if (res.status === 200) {
+        const Toast = swal.mixin({
+          toast: true,
+          position: "top-end",
+          background: '#333',
+          color: 'white',
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = swal.stopTimer;
+            toast.onmouseleave = swal.resumeTimer;
+          }
+        });
+        Toast.fire({
+          icon: "success",
+          title: res.data.message
+        });
+        getVentes();
+      }
+    })
+  };
   const deleteProduct = (e, id) => {
     swal.fire({
       title: "Are you sure?",
@@ -212,7 +251,8 @@ function Vente() {
                 <th>Status</th>
                 <th>Montant total</th>
                 <th>Montant Restant</th>
-                <th>Total Montant Payer</th>
+                <th>Montant Payer</th>
+                <th>Etat</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -226,7 +266,9 @@ function Vente() {
             {!loading &&
               <tbody className='animated fadeInDown'>
                 {currentItems.map(v => (
-                  <tr key={v.id}>
+                  <tr key={v.id} className={` ${v.type_vente === "commande" &&
+                    v.statut_reception === "en attente" &&
+                    new Date(v.DateReception) <= new Date() ? 'bg-yellow-950' : null}`}>
                     <td>{v.id}</td>
                     <td>{v.clients.nom}</td>
                     <td>{v.date}</td>
@@ -239,20 +281,65 @@ function Vente() {
                       ))}
                     </td>
                     <td>
-                      {v.Status === "direct" ? (
-                        <span className="status-btn secondary-btn">{v.Status}</span>
-                      ) : v.Status === "commande" ? (
-                        <span className="status-btn info-btn">{v.Status}</span>
+                      {v.statut_paiement === "non payé" ? (
+                        <span className="status-btn close-btn">{v.statut_paiement}</span>
+                      ) : v.statut_paiement === "partiellement payé" ? (
+                        <span className="status-btn info-btn">{v.statut_paiement}</span>
                       ) : (
-                        <span className="status-btn success-btn">{v.Status}</span>
+                        <span className="status-btn success-btn">{v.statut_paiement}</span>
                       )}
                     </td>
 
                     <td>{v.montant_total}</td>
                     <td>{v.MontantRestant}</td>
                     <td>{v.TotalMontantPaye}</td>
+                    <td>
+                      {v.statut_reception === "en attente" ? (
+                        <span className="status-btn orange-btn">{v.statut_reception}</span>
+                      ) : (
+                        <span className="status-btn secondary-btn">{v.statut_reception}</span>
+                      )}
+                    </td>
                     <td className='flex items-center gap-2'>
-                      <Action data={v} />
+                      <Menu>
+                        <MenuButton className="inline-flex items-center gap-2 rounded-md bg-gray-800 py-1.5 px-3 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-gray-700 data-[open]:bg-gray-700 data-[focus]:outline-1 data-[focus]:outline-white">
+                          Options
+                          <ChevronDownIcon className="size-4 fill-white/60" />
+                        </MenuButton>
+
+                        <MenuItems
+                          transition
+                          anchor="bottom end"
+                          className="w-52 rounded-xl border border-white/5 bg-dark-second p-1 text-sm/6 text-white transition duration-100 ease-out [--anchor-gap:var(--spacing-1)] focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0"
+                        >
+                          <MenuItem>
+                            <Link to={`/Vente/Details/${v.id}`} className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3 data-[focus]:bg-white/10 text-decoration-none text-white">
+                              <IoEyeSharp className="size-4 fill-white/30" />
+                              Voir
+                              <kbd className="ml-auto hidden font-sans text-xs text-white/50 group-data-[focus]:inline">⌘V</kbd>
+                            </Link>
+                          </MenuItem>
+                          {!(v.MontantRestant == 0 && v.statut_paiement === "payé") &&
+                            <MenuItem>
+                              <Link to={`/AddPaiement/${v.id}`} className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3 data-[focus]:bg-white/10 text-decoration-none text-white">
+                                <IoMdCash className="size-4 fill-white/30" />
+                                Paiement
+                                <kbd className="ml-auto hidden font-sans text-xs text-white/50 group-data-[focus]:inline">⌘P</kbd>
+                              </Link>
+                            </MenuItem>
+                          }
+                          {v.type_vente === "commande" && v.MontantRestant == 0 && v.statut_paiement === "payé" && v.statut_reception === "en attente" &&
+                            (<MenuItem>
+                              <button onClick={() => handleReception(v.id)} className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3 data-[focus]:bg-white/10">
+                                <TrashIcon className="size-4 fill-white/30" />
+                                Réceptionner
+                                <kbd className="ml-auto hidden font-sans text-xs text-white/50 group-data-[focus]:inline">⌘D</kbd>
+                              </button>
+                            </MenuItem>
+                            )
+                          }
+                        </MenuItems>
+                      </Menu>
                     </td>
                   </tr>
                 ))}

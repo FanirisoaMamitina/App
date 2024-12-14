@@ -65,7 +65,7 @@ class DashboardController extends Controller
         $ventes = Ventes::with([
             'clients',
             'detaille_Vente.produits' // Inclure les produits dans les détails de vente
-        ])->where('Status', '=', 'soldée')
+        ])->where('statut_paiement', '=', 'payé')
             ->orderBy('date', 'desc')
             ->limit(6) // Affiche les 6 ventes les plus récentes
             ->get();

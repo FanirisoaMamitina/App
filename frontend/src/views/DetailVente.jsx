@@ -28,7 +28,7 @@ function DetailVente() {
         );
     }
 
-    const { id ,date, montant_total, MontantRestant, TotalMontantPaye, Status, clients, paiements, detaille__vente } = details;
+    const { id ,date, montant_total, MontantRestant, TotalMontantPaye, statut_paiement, statut_reception, type_vente, clients, paiements, detaille__vente } = details;
 
     return (
         <div className="container mx-auto p-6">
@@ -45,8 +45,8 @@ function DetailVente() {
                         <FaCalendarAlt className="inline mr-2" />
                         Date de la vente : {new Date(date).toLocaleString()}
                     </div>
-                    <div className={`px-4 py-2 rounded-full text-white ${Status === "soldée" ? "bg-green-600" : "bg-yellow-500"}`}>
-                        Statut : {Status}
+                    <div className={`px-4 py-2 rounded-full text-white ${type_vente === "direct" ? "bg-indigo-600" : "bg-yellow-500"}`}>
+                        Type : {type_vente}
                     </div>
                 </div>
                 <p className='animated fadeInDown'>Montant Total : <span className="font-bold">{montant_total} Ar</span></p>

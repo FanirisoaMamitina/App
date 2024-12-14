@@ -50,7 +50,7 @@ class VenteController extends Controller
             'products.*.benefit' => 'required|numeric',
             'totalAmount' => 'required|numeric',
             'montantPayer' => 'required|numeric|min:0',
-            'status' => 'required|in:direct,commande',
+            'type' => 'required|in:direct,commande',
         ]);
 
         // Vérification des stocks pour chaque produit
@@ -73,7 +73,7 @@ class VenteController extends Controller
         $vente->DateReception = $request->input('DateReception');
         $vente->MontantRestant = $validatedData['totalAmount'] - $validatedData['montantPayer'];
         $vente->TotalMontantPaye = $validatedData['montantPayer'];
-        $vente->Status = $validatedData['status'];
+        $vente->type_vente = $validatedData['type'];
         $vente->save();
 
         // Enregistrement des produits dans 'detaille_ventes'
@@ -102,9 +102,18 @@ class VenteController extends Controller
         return response()->json(['message' => 'Vente enregistrée avec succès!', 'vente_id' => $vente->id], 200);
     }
 
-    /**
-     * Fonction pour gérer les nouveaux clients
-     */
+    public function updateReception(Request $request, $id)
+    {
+        $vente = Ventes::find($id);
+    
+        if($vente){
+            $vente->statut_reception = "reçu";
+            $vente->save();
+            return response()->json(['status' => 200, 'message' => 'Produit a réceptionné.']);
+        }
+    
+    }
+    
     private function createNewClient($clientData)
     {
         $client = Clients::create([

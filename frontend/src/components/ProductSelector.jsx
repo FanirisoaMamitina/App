@@ -141,7 +141,7 @@ function ProductSelector({ products, clients, loading }) {
             })),
             totalAmount: calculateTotalAmount(),
             montantPayer: 0,
-            status: isImmediatePayment ? "direct" : "commande",
+            type: isImmediatePayment ? "direct" : "commande",
             DateReception: !isImmediatePayment ? dateReception : '',
         };
 
@@ -177,7 +177,7 @@ function ProductSelector({ products, clients, loading }) {
                     })),
                     totalAmount: calculateTotalAmount(),
                     montantPayer: 0,
-                    status: isImmediatePayment ? "direct" : "commande",
+                    type: isImmediatePayment ? "direct" : "commande",
                     idVente: response.data.vente_id,
                 };
                 navigate("/Add Paiement", { state: data });

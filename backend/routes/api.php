@@ -66,6 +66,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('ventes/{id}', [VenteController::class, 'getInfoById']);
     Route::get('get-detail/{id}', [VenteController::class, 'getInfoVentePaiementById']);
     Route::post('store-vente', [VenteController::class, 'store']);
+    Route::put('update-reception/{id}', [VenteController::class, 'updateReception']);
+
     // Route::get('lastId', [VenteController::class], 'lastId');
 
 

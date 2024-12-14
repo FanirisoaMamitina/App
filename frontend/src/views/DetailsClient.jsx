@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {Link, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import axiosClient from '../axios-client';
 import { FaUser, FaBox, FaCalendarAlt, FaMoneyBillWave } from 'react-icons/fa';
 import { IoEyeOutline } from 'react-icons/io5';
@@ -30,7 +30,7 @@ function DetailsClient() {
         );
     }
 
-    const {ventes ,nom ,id ,tel, created_at} = details;
+    const { ventes, nom, id, tel, created_at } = details;
     return (
         <div className="container mx-auto p-6">
             {/* Header */}
@@ -77,12 +77,12 @@ function DetailsClient() {
                                     ))}
                                 </td> */}
                                 <td className="p-2">
-                                    {v.Status === "direct" ? (
-                                        <span className="status-btn secondary-btn">{v.Status}</span>
-                                    ) : v.Status === "commande" ? (
-                                        <span className="status-btn info-btn">{v.Status}</span>
+                                    {v.statut_paiement === "non payé" ? (
+                                        <span className="status-btn close-btn">{v.statut_paiement}</span>
+                                    ) : v.statut_paiement === "partiellement payé" ? (
+                                        <span className="status-btn info-btn">{v.statut_paiement}</span>
                                     ) : (
-                                        <span className="status-btn success-btn">{v.Status}</span>
+                                        <span className="status-btn success-btn">{v.statut_paiement}</span>
                                     )}
                                 </td>
 
@@ -90,7 +90,7 @@ function DetailsClient() {
                                 <td className="p-2">{v.MontantRestant}</td>
                                 <td className="p-2">{v.TotalMontantPaye}</td>
                                 <td className="p-2">
-                                <Link to={`/Vente/Details/${v.id}`} ><IoEyeOutline size={23} /></Link>
+                                    <Link to={`/Vente/Details/${v.id}`} ><IoEyeOutline size={23} /></Link>
                                 </td>
                             </tr>
                         ))}

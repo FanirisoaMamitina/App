@@ -84,7 +84,7 @@ function AddPaiement() {
     
 
     useEffect(() => {
-        if (state.status === "direct") {
+        if (state.type === "direct") {
             setMontant(state.totalAmount || "");
         }
     }, [state]);
