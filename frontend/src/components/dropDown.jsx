@@ -27,7 +27,7 @@ export default function Action({ data, onRefresh }) {
           title: 'Succès',
           text: res.data.message, // Message du backend
         });
-        onRefresh;
+        onRefresh();
       } 
     })
   };

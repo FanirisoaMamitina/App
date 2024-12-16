@@ -19,8 +19,22 @@ class VenteController extends Controller
     {
         $ventes = Ventes::with([
             'clients',
-            'detaille_Vente.produits' 
+            'detaille_Vente.produits'
         ])
+            ->whereIn('type_vente', ['commande', 'direct'])
+            ->orderBy('date', 'desc')
+            ->get();
+
+        return response()->json(['ventes' => $ventes]);
+    }
+
+    public function indexAnnule()
+    {
+        $ventes = Ventes::with([
+            'clients',
+            'detaille_Vente.produits'
+        ])
+            ->where('type_vente', 'annulé')
             ->orderBy('date', 'desc')
             ->get();
 
@@ -29,7 +43,7 @@ class VenteController extends Controller
 
     public function lastId()
     {
-        $venteId = Ventes::max('id'); 
+        $venteId = Ventes::max('id');
 
         return response()->json([
             'status' => 200,
@@ -39,9 +53,9 @@ class VenteController extends Controller
 
     public function store(Request $request)
     {
-       
+
         $validatedData = $request->validate([
-            'client' => 'required', 
+            'client' => 'required',
             'products' => 'required|array',
             'products.*.id' => 'required|exists:produits,id',
             'products.*.quantity' => 'required|integer|min:1',
@@ -105,15 +119,81 @@ class VenteController extends Controller
     public function updateReception(Request $request, $id)
     {
         $vente = Ventes::find($id);
-    
-        if($vente){
+
+        if ($vente) {
             $vente->statut_reception = "reçu";
             $vente->save();
             return response()->json(['status' => 200, 'message' => 'Produit a réceptionné.']);
         }
-    
     }
-    
+
+    public function recoverCancelledSaleToCommand($id)
+    {
+        $vente = Ventes::find($id);
+
+        if (!$vente) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Vente introuvable.',
+            ], 404);
+        }
+        if ($vente->type_vente !== 'annulé') {
+            return response()->json([
+                'status' => 400,
+                'message' => 'Cette vente n\'est pas annulée.',
+            ], 400);
+        }
+
+        $detailsVente = Detaille_Vente::where('vente_id', $id)->get();
+
+        if ($detailsVente->isEmpty()) {
+            return response()->json([
+                'status' => 400,
+                'message' => 'Aucun détail de vente trouvé pour cette vente.',
+            ], 400);
+        }
+
+        foreach ($detailsVente as $detail) {
+            $produit = Produits::find($detail->produit_id);
+
+            if (!$produit) {
+                return response()->json([
+                    'status' => 404,
+                    'message' => "Produit avec ID {$detail->produit_id} introuvable.",
+                ], 404);
+            }
+
+            if ($produit->stock < $detail->quantite) {
+                return response()->json([
+                    'status' => 400,
+                    'message' => "Le produit {$produit->nom_produit} n'a pas assez de stock pour cette récupération. Disponible: {$produit->stock}, requis: {$detail->quantite}.",
+                ], 400);
+            }
+        }
+
+        foreach ($detailsVente as $detail) {
+            $produit = Produits::find($detail->produit_id);
+            $produit->stock -= $detail->quantite;
+            $produit->save();
+        }
+
+        $vente->type_vente = 'commande';
+        $vente->save();
+
+        $this->enregistrerHistorique(
+            'modification',
+            'ventes',
+            $vente->id,
+            "Recuperation de la vente annulee avec ID: {$vente->id} en commande."
+        );
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Vente annulée récupérée avec succès ',
+        ]);
+    }
+
+
     private function createNewClient($clientData)
     {
         $client = Clients::create([
@@ -161,6 +241,90 @@ class VenteController extends Controller
         }
     }
 
+    public function cancelSale($id)
+    {
+        $vente = Ventes::find($id);
+        if (!$vente) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Vente introuvable.',
+            ], 404);
+        }
+        if ($vente->type_vente === 'annulé') {
+            return response()->json([
+                'status' => 400,
+                'message' => 'Cette vente a déjà été annulée.',
+            ], 400);
+        }
+
+        $detailsVente = Detaille_Vente::where('vente_id', $id)->get();
+
+        if ($detailsVente->isEmpty()) {
+            return response()->json([
+                'status' => 400,
+                'message' => 'Aucun détail de vente trouvé pour cette vente.',
+            ], 400);
+        }
+
+        foreach ($detailsVente as $detail) {
+            $produit = Produits::find($detail->produit_id);
+
+            if ($produit) {
+                $produit->stock += $detail->quantite;
+                $produit->save();
+            }
+        }
+
+        $vente->type_vente = 'annulé';
+        $vente->save();
+
+        $this->enregistrerHistorique(
+            'annulation',
+            'ventes',
+            $vente->id,
+            "Annulation de la vente avec ID: {$vente->id}."
+        );
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Vente annulée avec succès.',
+        ]);
+    }
+
+
+    public function delete($id)
+    {
+        $vente = Ventes::with(['detaille_Vente', 'paiements'])->find($id);
+
+        if (!$vente) {
+            return response()->json([
+                'status' => 404,
+                'message' => "Vente introuvable."
+            ], 404);
+        }
+
+        if ($vente->paiements) {
+            Paiement::where('idVente', $vente->id)->delete();
+        }
+
+        if ($vente->detaille_Vente) {
+            Detaille_Vente::where('vente_id', $vente->id)->delete();
+        }
+
+        $vente->delete();
+
+        $this->enregistrerHistorique(
+            'suppression',
+            'vente',
+            $vente->id,
+            "Suppression de la vente avec ID: {$vente->id}, Client: {$vente->client_id}, Total: {$vente->montant_total}"
+        );
+
+        return response()->json([
+            'status' => 200,
+            'message' => "Vente supprimée avec succès."
+        ], 200);
+    }
 
 
     /**

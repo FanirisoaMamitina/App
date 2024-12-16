@@ -27,6 +27,7 @@ import AddFacture from "./components/Form/Facture/AddFacture.jsx";
 import PaiementList from "./views/PaiementList.jsx";
 import DetailsClient from "./views/DetailsClient.jsx";
 import RapportBenefice from "./views/Rapport.jsx";
+import Archive from "./views/Archive.jsx";
 
 const router = createBrowserRouter([
     {
@@ -92,6 +93,10 @@ const router = createBrowserRouter([
             {
                 path:'/Vente/Ajout Vente',
                 element: <AddVente />
+            },
+            {
+                path:'/Vente/Archive',
+                element: <Archive />
             },
             {
                 path:'/paiement',

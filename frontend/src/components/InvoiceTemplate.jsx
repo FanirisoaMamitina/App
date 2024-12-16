@@ -55,7 +55,7 @@ const InvoiceTemplate = ({ invoiceData }) => {
 
       <section className="mb-2  px-2 pb-2">
         {description &&
-          <div className="px-4 py-2 border-1 border-gray-600 w-full h-[180px]">
+          <div className="px-4 py-2 border-1 border-gray-600 w-full h-[120px]">
             <p>
               <span>{description}</span>
             </p>

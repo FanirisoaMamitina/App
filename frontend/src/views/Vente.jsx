@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@mui/material';
-import { IoIosAdd } from 'react-icons/io';
+import { IoIosAdd, IoMdCheckmark, IoMdClose } from 'react-icons/io';
 import { Link, useLocation } from 'react-router-dom';
 import { FiEdit } from "react-icons/fi";
 import { PiMicrosoftExcelLogoFill } from "react-icons/pi";
@@ -74,7 +74,7 @@ function Vente() {
       }
     })
   };
-  const deleteProduct = (e, id) => {
+  const handleAnnuler = (e, id) => {
     swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -88,7 +88,7 @@ function Vente() {
       confirmButtonText: "Yes, delete it!"
     }).then((result) => {
       if (result.isConfirmed) {
-        axiosClient.delete(`delete-produit/${id}`).then(res => {
+        axiosClient.put(`cancel-vente/${id}`).then(res => {
           const Toast = swal.mixin({
             toast: true,
             position: "top-end",
@@ -104,7 +104,7 @@ function Vente() {
           });
           Toast.fire({
             icon: "success",
-            title: res.data.result
+            title: res.data.message
           });
         });
         getVentes();
@@ -112,15 +112,15 @@ function Vente() {
     });
   };
 
-  // Pagination logic
+
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
 
-  // Recherche en live par nom ou date
+
   const filteredItems = venteList.filter((v) => {
     const searchMatch = v.clients.nom.toLowerCase().includes(searchQuery.toLowerCase()) || v.date.toLowerCase().includes(searchQuery.toLowerCase());
 
-    // Filtrage par date
+
     const venteDate = new Date(v.date);
     const startDateMatch = startDate ? new Date(startDate) <= venteDate : true;
     const endDateMatch = endDate ? venteDate <= new Date(endDate) : true;
@@ -140,33 +140,32 @@ function Vente() {
   };
 
   const handleItemsPerPageChange = (e) => {
-    setItemsPerPage(Number(e.target.value));  // Changer le nombre d'éléments par page
-    setCurrentPage(1);  // Réinitialiser à la première page
+    setItemsPerPage(Number(e.target.value));
+    setCurrentPage(1);
   };
 
   const handleSearchChange = (e) => {
-    setSearchQuery(e.target.value);  // Mettre à jour la valeur de recherche
-    setCurrentPage(1);  // Réinitialiser à la première page lors de la recherche
+    setSearchQuery(e.target.value);
+    setCurrentPage(1);
   };
 
   const handleStartDateChange = (e) => {
-    setStartDate(e.target.value);  // Mettre à jour la date de début
-    setCurrentPage(1);  // Réinitialiser à la première page
+    setStartDate(e.target.value);
+    setCurrentPage(1);
   };
 
   const handleEndDateChange = (e) => {
-    setEndDate(e.target.value);  // Mettre à jour la date de fin
-    setCurrentPage(1);  // Réinitialiser à la première page
+    setEndDate(e.target.value);
+    setCurrentPage(1);
   };
 
-  // Fonction pour exporter les données en fichier Excel
   const exportToExcel = () => {
     const ws = XLSX.utils.json_to_sheet(
       filteredItems.map((v) => ({
         ID: v.id,
-        Nom: v.clients?.nom || "Non spécifié", // Vérification pour éviter les erreurs si le client est null
-        Date: new Date(v.date).toLocaleDateString(), // Formatage de la date
-        Produit: v.detaille__vente // Accéder correctement aux détails de vente
+        Nom: v.clients?.nom || "Non spécifié",
+        Date: new Date(v.date).toLocaleDateString(),
+        Produit: v.detaille__vente
           .map((detail) => `${detail.produits?.nom_produit || "Non spécifié"} (${detail.quantite} pcs)`)
           .join(" + "),
         "Status": v.Status,
@@ -176,10 +175,10 @@ function Vente() {
       }))
     );
 
-    const wb = XLSX.utils.book_new(); // Créer un nouveau classeur
-    XLSX.utils.book_append_sheet(wb, ws, "Ventes"); // Ajouter la feuille au classeur
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Ventes");
 
-    XLSX.writeFile(wb, "ventes.xlsx"); // Exporter le fichier sous le nom "ventes.xlsx"
+    XLSX.writeFile(wb, "ventes.xlsx");
   };
 
 
@@ -331,8 +330,18 @@ function Vente() {
                           {v.type_vente === "commande" && v.MontantRestant == 0 && v.statut_paiement === "payé" && v.statut_reception === "en attente" &&
                             (<MenuItem>
                               <button onClick={() => handleReception(v.id)} className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3 data-[focus]:bg-white/10">
-                                <TrashIcon className="size-4 fill-white/30" />
+                                <IoMdCheckmark className="size-4 fill-white/30" />
                                 Réceptionner
+                                <kbd className="ml-auto hidden font-sans text-xs text-white/50 group-data-[focus]:inline">⌘D</kbd>
+                              </button>
+                            </MenuItem>
+                            )
+                          }
+                          {v.type_vente === "commande" && !(v.statut_paiement === "payé") && v.statut_reception === "en attente" &&
+                            (<MenuItem>
+                              <button onClick={(e) => handleAnnuler(e,v.id)} className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3 data-[focus]:bg-white/10">
+                                <IoMdClose className="size-4 fill-white/30" />
+                                Annuler
                                 <kbd className="ml-auto hidden font-sans text-xs text-white/50 group-data-[focus]:inline">⌘D</kbd>
                               </button>
                             </MenuItem>

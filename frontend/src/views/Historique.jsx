@@ -2,6 +2,8 @@
 import React, { useEffect, useState } from 'react';
 import { FaTrash, FaEdit, FaPlus, FaDatabase } from 'react-icons/fa';
 import axiosClient from '../axios-client';
+import { TbFlagCancel } from 'react-icons/tb';
+import { MdCancel } from 'react-icons/md';
 
 function Historique() {
   const [historique, setHistorique] = useState([]);
@@ -33,8 +35,10 @@ function Historique() {
         return <FaEdit className="text-yellow-400" />;
       case 'suppression':
         return <FaTrash className="text-red-400" />;
+      case 'annulation':
+        return <MdCancel className="text-red-400" />;
       default:
-        return <FaDatabase className="text-blue-400" />;
+        return <FaDatabase className="text-blue-400" />
     }
   };
 

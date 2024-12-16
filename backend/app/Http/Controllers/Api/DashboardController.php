@@ -64,10 +64,10 @@ class DashboardController extends Controller
     {
         $ventes = Ventes::with([
             'clients',
-            'detaille_Vente.produits' // Inclure les produits dans les détails de vente
+            'detaille_Vente.produits' 
         ])->where('statut_paiement', '=', 'payé')
             ->orderBy('date', 'desc')
-            ->limit(6) // Affiche les 6 ventes les plus récentes
+            ->limit(6) 
             ->get();
 
         return response()->json(['ventes' => $ventes]);
@@ -75,7 +75,7 @@ class DashboardController extends Controller
 
     public function getBenefices(Request $request)
     {
-        $type = $request->query('type', 'journalier'); // Par défaut : journalier
+        $type = $request->query('type', 'journalier'); 
     
         $query = DB::table('ventes')
             ->join('detaille_ventes', 'ventes.id', '=', 'detaille_ventes.vente_id')

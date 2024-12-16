@@ -51,6 +51,34 @@ function AddPaiementById() {
         e.preventDefault();
         setLoad("on");
 
+        if (montant <= 0) {
+            swal.fire({
+                icon: "error",
+                title: "Erreur",
+                text: "Le montant payé doit être supérieur à zéro.",
+                background: '#333',
+                color: 'white',
+                confirmButtonColor: '#3085d6'
+            });
+            setLoad("off");
+            return;
+        }
+
+        const montantRestant = details.montant_total - (details.TotalMontantPaye || 0);
+        if (montant > montantRestant) {
+            swal.fire({
+                icon: "error",
+                title: "Erreur",
+                text: `Le montant payé (${montant}) dépasse le montant restant (${montantRestant}).`,
+                background: '#333',
+                color: 'white',
+                confirmButtonColor: '#3085d6'
+            });
+            setLoad("off");
+            return;
+        }
+
+
         const data = {
             idVente: details?.id,
             MontantPaye: montant,
@@ -184,6 +212,9 @@ function AddPaiementById() {
                             placeholder="Montant à payer"
                             className="relative block w-full shadow-sm shadow-black appearance-none rounded-lg pl-[10px] py-[10px] text-white placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm bg-dark-primary border-3 border-teal-950"
                         />
+                        {paiementErrors && (
+                            <span className='text-red-600 text-sm'>{paiementErrors.MontantPaye}</span>
+                        )}
                     </div>
                     <div className="w-full mt-[18px]">
                         <label htmlFor="selc" className="text-textG">
@@ -205,6 +236,9 @@ function AddPaiementById() {
                                 </option>
                             ))}
                         </select>
+                        {paiementErrors && (
+                            <span className='text-red-600 text-sm'>{paiementErrors.ModePaiement}</span>
+                        )}
                     </div>
                 </div>
                 <div className="w-full mt-[18px]">

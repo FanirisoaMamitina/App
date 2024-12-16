@@ -9,7 +9,7 @@ function AddPaiement() {
     const { state } = useLocation();
     const navigate = useNavigate()
 
-    const [paiementErrors, setPaiementErrors] = useState([])
+    const [paiementErrors, setPaiementErrors] = useState({})
     const [load, setLoad] = useState('off');
 
     const [montant, setMontant] = useState("");
@@ -27,7 +27,34 @@ function AddPaiement() {
     const handleSubmit = (e) => {
         e.preventDefault();
         setLoad("on");
-    
+
+        if (montant <= 0) {
+            swal.fire({
+                icon: "error",
+                title: "Erreur",
+                text: "Le montant payé doit être supérieur à zéro.",
+                background: '#333',
+                color: 'white',
+                confirmButtonColor: '#3085d6'
+            });
+            setLoad("off");
+            return;
+        }
+
+        const montantRestant = state.totalAmount - (state.montantPayer || 0);
+        if (montant > montantRestant) {
+            swal.fire({
+                icon: "error",
+                title: "Erreur",
+                text: `Le montant payé (${montant}) dépasse le montant restant (${montantRestant}).`,
+                background: '#333',
+                color: 'white',
+                confirmButtonColor: '#3085d6'
+            });
+            setLoad("off");
+            return;
+        }
+
         const data = {
             idVente: state?.idVente,
             MontantPaye: montant,
@@ -35,7 +62,7 @@ function AddPaiement() {
             Ref: reference,
             isFacture: isChecked, // Indique si une facture doit être créée
         };
-    
+
         axiosClient.post("/store-paiement", data).then((res) => {
             if (res.data.status === 200) {
                 const Toast = swal.mixin({
@@ -55,7 +82,7 @@ function AddPaiement() {
                     icon: "success",
                     title: res.data.message,
                 });
-    
+
                 if (isChecked) {
                     navigate("/Facture", {
                         state: {
@@ -74,14 +101,14 @@ function AddPaiement() {
             } else if (res.data.status === 400) {
                 setPaiementErrors(res.data.errors);
             }
-    
+
             setLoad("off");
         }).catch((error) => {
             console.error("Erreur lors de l'envoi des données : ", error);
             setLoad("off");
         });
     };
-    
+
 
     useEffect(() => {
         if (state.type === "direct") {
@@ -174,6 +201,9 @@ function AddPaiement() {
                             placeholder="Montant à payer"
                             className="relative block w-full shadow-sm shadow-black appearance-none rounded-lg pl-[10px] py-[10px] text-white placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm bg-dark-primary border-3 border-teal-950"
                         />
+                        {paiementErrors && (
+                            <span className='text-red-600 text-sm'>{paiementErrors.MontantPaye}</span>
+                        )}
                     </div>
 
                     <div className="w-full mt-[18px]">
@@ -196,6 +226,9 @@ function AddPaiement() {
                                 </option>
                             ))}
                         </select>
+                        {paiementErrors && (
+                            <span className='text-red-600 text-sm'>{paiementErrors.ModePaiement}</span>
+                        )}
                     </div>
                 </div>
                 <div className="w-full mt-[18px]">

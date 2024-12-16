@@ -82,7 +82,7 @@ function Sidebar() {
     {
       name: "Vente",
       icon: FiShoppingCart,
-      menus: ["Liste Vente", "Ajout Vente"]
+      menus: ["Liste Vente", "Ajout Vente" , "Archive"]
     },
   ]
 

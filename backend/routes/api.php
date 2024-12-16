@@ -63,10 +63,15 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //Ventes
     Route::get('view-ventes', [VenteController::class, 'index']);
+    Route::get('view-archive', [VenteController::class, 'indexAnnule']);
     Route::get('ventes/{id}', [VenteController::class, 'getInfoById']);
     Route::get('get-detail/{id}', [VenteController::class, 'getInfoVentePaiementById']);
     Route::post('store-vente', [VenteController::class, 'store']);
     Route::put('update-reception/{id}', [VenteController::class, 'updateReception']);
+    Route::put('cancel-vente/{id}', [VenteController::class, 'cancelSale']);
+    Route::put('update-type/{id}', [VenteController::class, 'recoverCancelledSaleToCommand']);
+    Route::delete('delete-vente/{id}', [VenteController::class, 'delete']);
+
 
     // Route::get('lastId', [VenteController::class], 'lastId');
 

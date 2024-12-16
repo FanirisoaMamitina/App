@@ -41,7 +41,6 @@ class PaiementController extends Controller
                 'errors' => $validator->messages(),
             ]);
         }
-
         // Créer le paiement
         $paiement = new Paiement;
         $paiement->idVente = $request->input('idVente');

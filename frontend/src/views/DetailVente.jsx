@@ -52,7 +52,7 @@ function DetailVente() {
                 <p className='animated fadeInDown'>Montant Total : <span className="font-bold">{montant_total} Ar</span></p>
                 <p className='animated fadeInDown'>Montant Payé : <span className="font-bold">{TotalMontantPaye} Ar</span></p>
                 <p className='animated fadeInDown flex items-center space-x-5'>Montant Restant : <span className="font-bold">{" "+ MontantRestant} Ar</span>
-                {!(MontantRestant == 0) &&
+                {!(MontantRestant == 0) && !(type_vente === "annulé") &&
                     <Link to={`/AddPaiement/${id}`} className="group flex  items-center gap-2 bg-indigo-500 rounded-lg py-1.5 px-3 data-[focus]:bg-white/10 text-decoration-none text-white hover:bg-indigo-700">
                         <IoMdCash className="size-4 fill-white" />
                         Payer Maintenant
