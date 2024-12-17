@@ -11,6 +11,7 @@ use App\Models\Produits;
 use App\Models\Ventes;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class VenteController extends Controller
 {
@@ -26,6 +27,20 @@ class VenteController extends Controller
             ->get();
 
         return response()->json(['ventes' => $ventes]);
+    }
+
+    public function getStatsVentes()
+    {
+        $dateActuelle = Carbon::now('Indian/Antananarivo');
+        $commandesEnRetard = DB::table('ventes')
+            ->where('DateReception', '<=', $dateActuelle) 
+            ->where('type_vente', 'commande') 
+            ->where('statut_reception', 'en attente')   
+            ->count();
+
+        return response()->json([
+            'commandesEnRetard' => $commandesEnRetard,
+        ]);
     }
 
     public function indexAnnule()

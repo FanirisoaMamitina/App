@@ -156,12 +156,10 @@ function Sidebar() {
             isOpen && (<div className="flex-1 text-sm z-50 max-h-40 my-auto whitespace-pre w-full font-medium text-textG" >
               <div className="flex items-center justify-between border-y border-gray-line p-3 ">
                 <div>
-                  <p>Spark</p>
-                  <small>No-cost</small>
+                  <p>version</p>
+                  <small>1.0</small>
                 </div>
-                <p className="text-teal-500 py-1.5 px-3 text-xs bg-teal-50 rounded-xl">
-                  Upgrade
-                </p>
+    
               </div>
             </div>
             )}

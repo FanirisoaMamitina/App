@@ -24,7 +24,7 @@ import { AiFillNotification, AiOutlineNotification } from 'react-icons/ai'
 function Navbar() {
   const navigate =useNavigate()
   const { pathname } = useLocation()
-  const { user, setUser } = useStateContext()
+  const { user, setUser,setToken } = useStateContext()
   const [isOpenDrop, setIsOpenDrop] = useState(false)
 
   useEffect(() => {
@@ -43,9 +43,13 @@ function Navbar() {
   //   addEventListener
   // }
 
-  const handlelogout = () => {
-     localStorage.clear();
-     navigate('/login');
+  const handlelogout = (ev) => {
+    ev.preventDefault();
+    axiosClient.post('/logout')
+      .then(() => {
+        setUser({});
+        setToken(null);
+      })
   }
 
   const handle = () => {
@@ -157,7 +161,7 @@ function Navbar() {
       </div>
       {isOpenDrop &&
         <ul className="absolute top-17 right-2 bg-dark-second px-8 py-2 rounded-b-md rounded-r-md shadow-md shadow-black text-slate-50">
-          <li><button onClick={handlelogout} className='flex items-center space-x-2 hover:text-teal-600' ><span>Logout</span> <IoMdExit /></button></li>
+          <li><button onClick={handlelogout} className='flex items-center space-x-2 hover:text-teal-600' ><span>Deconnexion</span> <IoMdExit /></button></li>
         </ul>
       }
     </header>

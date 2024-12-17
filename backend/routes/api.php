@@ -71,16 +71,17 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('cancel-vente/{id}', [VenteController::class, 'cancelSale']);
     Route::put('update-type/{id}', [VenteController::class, 'recoverCancelledSaleToCommand']);
     Route::delete('delete-vente/{id}', [VenteController::class, 'delete']);
+    Route::get('number-retard', [VenteController::class, 'getStatsVentes']);
 
 
     // Route::get('lastId', [VenteController::class], 'lastId');
 
 
     //Paiement
-    Route::get('getPaiement',[PaiementController::class, 'index']);
+    Route::get('getPaiement', [PaiementController::class, 'index']);
     Route::post('store-paiement', [PaiementController::class, 'store']);
     Route::get('facture-details/{id}', [PaiementController::class, 'getFactureDetails']);
-    Route::post('store-facture',[PaiementController::class, 'storeFacture']);
+    Route::post('store-facture', [PaiementController::class, 'storeFacture']);
     Route::put('/factures/{id}/update-description', [PaiementController::class, 'updateDescription']);
 
 
@@ -93,9 +94,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/notifications/low-stock/{id}', [NotificationController::class, 'notifyLowStock']);
 
     Route::post('send-invoice', [InvoiceController::class, 'sendInvoice']);
+    Route::post('/logout', [AuthController::class, 'logout']);
 });
 
 
 Route::post('/signup', [AuthController::class, 'signup']);
 Route::post('/login', [AuthController::class, 'login']);
-Route::post('/logout', [AuthController::class, 'logout']);

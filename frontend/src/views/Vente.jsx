@@ -24,6 +24,7 @@ function Vente() {
   const { pathname } = useLocation();
   const [loading, setLoading] = useState(false);
   const [venteList, setVente] = useState([]);
+  const [venteRetard, setVenteRetard] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
   const [searchQuery, setSearchQuery] = useState('');
@@ -32,8 +33,79 @@ function Vente() {
 
   useEffect(() => {
     getVentes();
+    getRetard();
   }, []);
 
+  console.log(venteRetard)
+
+  const renderPageNumbers = () => {
+    const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
+    const maxButtons = 5; // Nombre max de boutons visibles à la fois
+    const buttons = [];
+
+    if (totalPages <= maxButtons) {
+      for (let i = 1; i <= totalPages; i++) {
+        buttons.push(
+          <button
+            key={i}
+            onClick={() => handlePageChange(i)}
+            className={`px-3 py-1 mx-1 rounded-md ${i === currentPage ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
+          >
+            {i}
+          </button>
+        );
+      }
+    } else {
+      if (currentPage > 1) {
+        buttons.push(
+          <button
+            key="prev"
+            onClick={() => handlePageChange(currentPage - 1)}
+            className="px-3 py-1 mx-1 rounded-md bg-gray-200"
+          >
+            &lt;&lt;
+          </button>
+        );
+      }
+
+      const start = Math.max(1, currentPage - 2);
+      const end = Math.min(totalPages, currentPage + 2);
+
+      if (start > 1) {
+        buttons.push(<span key="start-ellipsis" className="px-2 text-textG">...</span>);
+      }
+
+      for (let i = start; i <= end; i++) {
+        buttons.push(
+          <button
+            key={i}
+            onClick={() => handlePageChange(i)}
+            className={`px-3 py-1 mx-1 rounded-md ${i === currentPage ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
+          >
+            {i}
+          </button>
+        );
+      }
+
+      if (end < totalPages) {
+        buttons.push(<span key="end-ellipsis" className="px-2 text-textG">...</span>);
+      }
+
+      if (currentPage < totalPages) {
+        buttons.push(
+          <button
+            key="next"
+            onClick={() => handlePageChange(currentPage + 1)}
+            className="px-3 py-1 mx-1 rounded-md bg-gray-200"
+          >
+            &gt;&gt;
+          </button>
+        );
+      }
+    }
+
+    return buttons;
+  };
 
 
   const getVentes = () => {
@@ -45,6 +117,12 @@ function Vente() {
       setLoading(false);
     });
   };
+
+  const getRetard = () => {
+    axiosClient.get('/number-retard').then(res => {
+      setVenteRetard(res.data.commandesEnRetard);
+    });
+  }
 
   const handleRefresh = () => {
     getVentes(); // Rafraîchit la liste
@@ -71,6 +149,7 @@ function Vente() {
           title: res.data.message
         });
         getVentes();
+        getRetard();
       }
     })
   };
@@ -108,6 +187,7 @@ function Vente() {
           });
         });
         getVentes();
+        getRetard();
       }
     });
   };
@@ -190,6 +270,7 @@ function Vente() {
             <h3 className="text-gray-400 font-medium">Vente</h3>
             <p className='text-textG text-sm'>Vente/Liste</p>
           </div>
+
           <div>
             <Link to={'/Vente/Ajout Vente'} className="flex items-center gap-1 text-decoration-none text-white bg-indigo-600 rounded-md px-3 py-2 btn-sh hover:bg-indigo-700 transition-all duration-500">
               <span>Ajouter</span>
@@ -339,7 +420,7 @@ function Vente() {
                           }
                           {v.type_vente === "commande" && !(v.statut_paiement === "payé") && v.statut_reception === "en attente" &&
                             (<MenuItem>
-                              <button onClick={(e) => handleAnnuler(e,v.id)} className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3 data-[focus]:bg-white/10">
+                              <button onClick={(e) => handleAnnuler(e, v.id)} className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3 data-[focus]:bg-white/10">
                                 <IoMdClose className="size-4 fill-white/30" />
                                 Annuler
                                 <kbd className="ml-auto hidden font-sans text-xs text-white/50 group-data-[focus]:inline">⌘D</kbd>
@@ -357,13 +438,24 @@ function Vente() {
           </table>
 
           {/* Pagination */}
-          <div className="pagination flex justify-center items-center mt-4">
-            {pageNumbers.map(number => (
-              <button key={number} onClick={() => handlePageChange(number)} className={`px-3 py-1 mx-1 rounded-md ${currentPage === number ? 'bg-indigo-600 text-white' : 'bg-gray-200 text-gray-700'}`}>
-                {number}
-              </button>
-            ))}
+          <div className="mt-4 flex items-center justify-between px-4">
+            {/* Affichage des commandes en retard */}
+            <div className="text-textG font-medium">
+              {venteRetard > 0 ? (
+                <>
+                  <span className="text-red-500">Commandes en retard :</span> {venteRetard}
+                </>
+              ) : (
+                "Aucune commande en retard"
+              )}
+            </div>
+
+            {/* Pagination */}
+            <div className="flex items-center space-x-2">
+              {renderPageNumbers()}
+            </div>
           </div>
+
         </div>
       </div>
     </div>
